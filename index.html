@@ -1,0 +1,2977 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>饺子馅调配游戏 - 高级交互版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #d32f2f;
+            --secondary-color: #ff9800;
+            --success-color: #4caf50;
+            --info-color: #2196f3;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --light-bg: #f8f3e9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-color: #e0e0e0;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f8f3e9"/><path d="M0,50 Q25,40 50,50 T100,50 L100,100 L0,100 Z" fill="%23f0e6d2" opacity="0.3"/></svg>');
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* 头部样式 */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary-color), #b71c1c);
+            border-radius: var(--border-radius);
+            color: white;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="white" opacity="0.05"/></svg>');
+            background-size: 150px 150px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        /* 角色选择器 */
+        .role-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .role-btn {
+            padding: 16px 35px;
+            font-size: 1.2rem;
+            background-color: white;
+            color: var(--primary-color);
+            border: 3px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .role-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .role-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .role-btn .icon {
+            font-size: 1.5rem;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow-light);
+            margin-bottom: 25px;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 学生端样式 */
+        #student-view {
+            display: block;
+        }
+        
+        .student-setup {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .student-setup {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .setup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: bold;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group label .icon {
+            color: var(--primary-color);
+        }
+        
+        .form-control {
+            padding: 14px;
+            font-size: 1.1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+        
+        /* 游戏区域 */
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 1024px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 原料选择 */
+        .ingredients-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        
+        .ingredient-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ingredient-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--primary-color);
+        }
+        
+        .ingredient-card.selected {
+            background-color: #ffebee;
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .ingredient-card.selected::after {
+            content: "✓";
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .ingredient-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            background-color: #f8f8f8;
+            transition: var(--transition);
+        }
+        
+        .ingredient-card:hover .ingredient-icon {
+            transform: scale(1.1);
+        }
+        
+        .ingredient-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .ingredient-pinyin {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .ingredient-desc {
+            font-size: 0.8rem;
+            color: #888;
+        }
+        
+        /* 已选择原料 */
+        .selected-ingredients-container {
+            margin-top: 20px;
+        }
+        
+        .selected-ingredients {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .selected-tag {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #e3f2fd;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #bbdefb;
+        }
+        
+        .selected-tag .remove-btn {
+            margin-left: 8px;
+            cursor: pointer;
+            color: var(--danger-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        /* 句子构建 */
+        .sentence-builder {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .builder-section {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .word-item {
+            padding: 10px 15px;
+            background-color: white;
+            border-radius: 8px;
+            cursor: grab;
+            border: 2px dashed var(--border-color);
+            transition: var(--transition);
+            user-select: none;
+            font-size: 1.1rem;
+        }
+        
+        .word-item:hover {
+            border-color: var(--primary-color);
+            background-color: #fff9f9;
+            transform: translateY(-2px);
+        }
+        
+        .sentence-area {
+            min-height: 100px;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            background-color: white;
+            margin-bottom: 15px;
+        }
+        
+        .sentence-word {
+            padding: 8px 15px;
+            background-color: #e8f5e9;
+            border-radius: 6px;
+            border: 1px solid #c8e6c9;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .sentence-word:hover {
+            background-color: #ffebee;
+            border-color: #ffcdd2;
+        }
+        
+        .sentence-word.placeholder {
+            background-color: transparent;
+            border: 2px dashed #ccc;
+            color: #999;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .sentence-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* 结果区域 */
+        .result-area {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .bowl-container {
+            text-align: center;
+            margin-top: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #bowl {
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle at 30% 30%, #fff8e1, #ffecb3);
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            position: relative;
+            border: 15px solid #ffd54f;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        #bowl.filled {
+            transform: scale(1.05);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1), 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .ingredient-in-bowl {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: dropIn 0.8s forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes dropIn {
+            0% { 
+                opacity: 0; 
+                transform: translateY(-100px) scale(0.5);
+            }
+            70% { 
+                opacity: 1; 
+                transform: translateY(10px) scale(1.1);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .result-text {
+            font-size: 1.3rem;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: var(--shadow-light);
+        }
+        
+        /* 进度和得分 */
+        .progress-section {
+            margin-top: 25px;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background-color: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 6px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            border-top: 4px solid var(--info-color);
+        }
+        
+        .stat-card.score {
+            border-top-color: var(--success-color);
+        }
+        
+        .stat-card.accuracy {
+            border-top-color: var(--warning-color);
+        }
+        
+        .stat-card.attempts {
+            border-top-color: var(--danger-color);
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        /* 教师端样式 */
+        #teacher-view {
+            display: none;
+        }
+        
+        .teacher-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .teacher-dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+        
+        @media (max-width: 1200px) {
+            .teacher-dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .class-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .overview-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            border-top: 5px solid var(--info-color);
+        }
+        
+        .overview-card.total {
+            border-top-color: var(--info-color);
+        }
+        
+        .overview-card.active {
+            border-top-color: var(--success-color);
+        }
+        
+        .overview-card.completed {
+            border-top-color: var(--warning-color);
+        }
+        
+        .overview-card.average {
+            border-top-color: var(--primary-color);
+        }
+        
+        .overview-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .overview-label {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+        
+        .student-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .student-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            border-left: 5px solid var(--info-color);
+            transition: var(--transition);
+        }
+        
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .student-card.completed {
+            border-left-color: var(--success-color);
+        }
+        
+        .student-card.active {
+            border-left-color: var(--warning-color);
+        }
+        
+        .student-card.inactive {
+            border-left-color: var(--text-light);
+        }
+        
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .student-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .student-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+        
+        .status-completed {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+        
+        .status-inactive {
+            background-color: #f5f5f5;
+            color: var(--text-light);
+        }
+        
+        .student-progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .student-progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+        }
+        
+        .student-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .student-ingredients {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .student-ingredients ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        
+        .student-ingredients li {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            gap: 10px;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b71c1c;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f57c00;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+        
+        .btn-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background-color: #1976d2;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-lg {
+            padding: 16px 35px;
+            font-size: 1.2rem;
+        }
+        
+        /* 反馈消息 */
+        .feedback {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideIn 0.5s ease;
+            box-shadow: var(--shadow-light);
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .feedback.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .feedback.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 5px solid #f44336;
+        }
+        
+        .feedback.info {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            border-left: 5px solid #2196f3;
+        }
+        
+        .feedback.warning {
+            background-color: #fff3e0;
+            color: #ef6c00;
+            border-left: 5px solid #ff9800;
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-heavy);
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+        
+        /* 工具提示 */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .game-area, .teacher-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .student-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .student-setup {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .ingredients-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+        
+        /* 动画 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* 语音按钮 */
+        .voice-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--info-color);
+            transition: var(--transition);
+            padding: 5px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .voice-btn:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.1);
+        }
+        
+        /* 时间戳 */
+        .timestamp {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        /* 连接状态 */
+        .connection-status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-connected {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+        
+        .status-disconnected {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+        
+        .status-connecting {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+        
+        /* 加载动画 */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🥟 饺子馅调配游戏</h1>
+            <p class="subtitle">学习"把"字句，调配美味饺子馅</p>
+            <div class="connection-status status-connected" id="global-connection-status">
+                <span class="icon">🔗</span> 已连接
+            </div>
+        </header>
+        
+        <div class="role-selector">
+            <button class="role-btn active" id="student-btn">
+                <span class="icon">👨‍🎓</span> 学生端
+            </button>
+            <button class="role-btn" id="teacher-btn">
+                <span class="icon">👨‍🏫</span> 教师端
+            </button>
+        </div>
+        
+        <!-- 学生端 -->
+        <div id="student-view">
+            <!-- 学生设置 -->
+            <div class="card" id="student-setup-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">👤</span> 学生信息设置
+                    </h2>
+                </div>
+                <div class="student-setup">
+                    <div class="setup-form">
+                        <div class="form-group">
+                            <label for="student-name-input">
+                                <span class="icon">📝</span> 姓名
+                            </label>
+                            <input type="text" id="student-name-input" class="form-control" placeholder="请输入你的姓名">
+                            <small>请使用真实姓名，方便老师查看</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="class-code-input">
+                                <span class="icon">🏫</span> 班级代码
+                            </label>
+                            <input type="text" id="class-code-input" class="form-control" placeholder="请输入老师提供的班级代码">
+                            <small>如果不知道代码，请询问老师</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="student-id-input">
+                                <span class="icon">🆔</span> 学号 (可选)
+                            </label>
+                            <input type="text" id="student-id-input" class="form-control" placeholder="请输入学号 (可选)">
+                        </div>
+                        
+                        <button class="btn btn-primary btn-lg" id="join-class-btn">
+                            <span class="icon">🚪</span> 加入班级
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="icon">ℹ️</span> 游戏说明
+                        </h3>
+                        <ol style="padding-left: 20px; margin-top: 15px;">
+                            <li>输入姓名和班级代码加入课堂</li>
+                            <li>选择1-3种饺子馅原料</li>
+                            <li>使用提供的词语构建正确的"把"字句</li>
+                            <li>点击验证按钮检查句子是否正确</li>
+                            <li>正确的句子会将原料加入碗中</li>
+                            <li>目标是使用所有8种原料完成饺子馅调配</li>
+                            <li>教师可以实时查看你的进度</li>
+                        </ol>
+                        <div class="feedback info" style="margin-top: 20px;">
+                            <span class="icon">💡</span> 提示：所有词汇都在HSK4级范围内
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 游戏界面 (初始隐藏) -->
+            <div id="game-interface" style="display: none;">
+                <div class="game-area">
+                    <!-- 左侧：原料选择和句子构建 -->
+                    <div class="ingredients-section card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <span class="icon">🥬</span> 选择饺子原料
+                            </h2>
+                            <div class="connection-status status-connected" id="student-status">
+                                <span class="icon">📡</span> 同步中
+                            </div>
+                        </div>
+                        
+                        <div class="ingredients-grid" id="ingredients-container">
+                            <!-- 原料将通过JavaScript动态生成 -->
+                        </div>
+                        
+                        <div class="selected-ingredients-container">
+                            <h3 class="section-title">
+                                <span class="icon">✅</span> 已选择的原料
+                            </h3>
+                            <div class="selected-ingredients" id="selected-ingredients">
+                                <div class="selected-tag placeholder">
+                                    请从上方选择1-3种原料
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sentence-builder card" style="margin-top: 20px;">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <span class="icon">📝</span> 构建"把"字句
+                                </h2>
+                                <button class="btn btn-outline btn-sm" id="voice-btn">
+                                    <span class="icon">🔊</span> 朗读
+                                </button>
+                            </div>
+                            
+                            <div class="builder-section">
+                                <h3 class="section-title">
+                                    <span class="icon">🧱</span> 词语库
+                                </h3>
+                                <div class="word-bank" id="word-bank">
+                                    <!-- 词语将通过JavaScript动态生成 -->
+                                </div>
+                                
+                                <h3 class="section-title">
+                                    <span class="icon">✨</span> 句子构建区
+                                </h3>
+                                <div class="sentence-area" id="sentence-area">
+                                    <div class="sentence-word placeholder">
+                                        主语
+                                    </div>
+                                    <div class="sentence-word placeholder">
+                                        把
+                                    </div>
+                                    <div class="sentence-word placeholder">
+                                        宾语
+                                    </div>
+                                    <div class="sentence-word placeholder">
+                                        动词
+                                    </div>
+                                    <div class="sentence-word placeholder">
+                                        其他成分
+                                    </div>
+                                </div>
+                                
+                                <div class="sentence-actions">
+                                    <button class="btn btn-primary" id="validate-btn">
+                                        <span class="icon">✓</span> 验证句子
+                                    </button>
+                                    <button class="btn btn-outline" id="clear-sentence-btn">
+                                        <span class="icon">🗑️</span> 清空
+                                    </button>
+                                    <button class="btn btn-outline" id="hint-btn">
+                                        <span class="icon">💡</span> 提示
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧：结果展示和进度 -->
+                    <div class="result-area card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <span class="icon">🥣</span> 饺子馅调配结果
+                            </h2>
+                            <button class="btn btn-secondary btn-sm" id="add-ingredient-btn" disabled>
+                                <span class="icon">➕</span> 添加到碗中
+                            </button>
+                        </div>
+                        
+                        <div class="bowl-container">
+                            <div id="bowl"></div>
+                            <div class="result-text" id="result-text">
+                                碗是空的，开始添加原料调配饺子馅吧！
+                            </div>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <h3 class="section-title">
+                                <span class="icon">📊</span> 进度和得分
+                            </h3>
+                            <div class="progress-info">
+                                <span>馅料调配进度</span>
+                                <span id="progress-text">0/8</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-card score">
+                                    <div class="stat-value" id="score-value">0</div>
+                                    <div class="stat-label">得分</div>
+                                </div>
+                                <div class="stat-card accuracy">
+                                    <div class="stat-value" id="accuracy-value">0%</div>
+                                    <div class="stat-label">准确率</div>
+                                </div>
+                                <div class="stat-card attempts">
+                                    <div class="stat-value" id="attempts-value">0</div>
+                                    <div class="stat-label">尝试次数</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" style="margin-top: 20px;">
+                            <h3 class="card-title">
+                                <span class="icon">📋</span> 已添加的原料
+                            </h3>
+                            <div id="added-ingredients-list">
+                                <p style="color: var(--text-light); text-align: center; padding: 20px;">
+                                    还没有添加任何原料
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feedback" id="game-feedback" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- 教师端 -->
+        <div id="teacher-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">👨‍🏫</span> 教师控制面板
+                    </h2>
+                    <div class="connection-status status-connected" id="teacher-status">
+                        <span class="icon">📡</span> 实时同步
+                    </div>
+                </div>
+                
+                <div class="teacher-controls">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="teacher-class-code-input">
+                            <span class="icon">🏫</span> 班级代码
+                        </label>
+                        <input type="text" id="teacher-class-code-input" class="form-control" placeholder="输入或生成班级代码">
+                    </div>
+                    
+                    <button class="btn btn-primary" id="create-class-btn">
+                        <span class="icon">➕</span> 创建新班级
+                    </button>
+                    <button class="btn btn-info" id="load-class-btn">
+                        <span class="icon">📂</span> 加载班级
+                    </button>
+                    <button class="btn btn-secondary" id="export-data-btn">
+                        <span class="icon">📤</span> 导出数据
+                    </button>
+                </div>
+                
+                <div id="class-info" style="display: none;">
+                    <div class="class-overview">
+                        <div class="overview-card total">
+                            <div class="overview-value" id="total-students">0</div>
+                            <div class="overview-label">学生总数</div>
+                        </div>
+                        <div class="overview-card active">
+                            <div class="overview-value" id="active-students">0</div>
+                            <div class="overview-label">活跃学生</div>
+                        </div>
+                        <div class="overview-card completed">
+                            <div class="overview-value" id="completed-students">0</div>
+                            <div class="overview-label">已完成</div>
+                        </div>
+                        <div class="overview-card average">
+                            <div class="overview-value" id="average-score">0</div>
+                            <div class="overview-label">平均得分</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span class="icon">👥</span> 学生列表
+                            </h3>
+                            <div>
+                                <button class="btn btn-outline btn-sm" id="refresh-students-btn">
+                                    <span class="icon">🔄</span> 刷新
+                                </button>
+                                <button class="btn btn-outline btn-sm" id="sort-students-btn">
+                                    <span class="icon">📊</span> 按得分排序
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="student-list" id="student-list-container">
+                            <div class="card" style="text-align: center; padding: 40px;">
+                                <div class="loader"></div>
+                                <p style="margin-top: 15px; color: var(--text-light);">正在加载学生数据...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 语法提示模态框 -->
+        <div class="modal" id="grammar-hint-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        <span class="icon">💡</span> "把"字句语法提示
+                    </h3>
+                    <button class="modal-close" id="close-grammar-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4>位移把字句结构：</h4>
+                    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <strong>主语 + 把 + 宾语 + 动词 + 其他成分</strong>
+                    </div>
+                    
+                    <h4>常用结构示例：</h4>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li><strong>主语 + 把 + 宾语 + 动词 + 到 + 地点</strong><br>例如：我把猪肉放到碗里。</li>
+                        <li><strong>主语 + 把 + 宾语 + 动词 + 进 + 地点</strong><br>例如：妈妈把鸡蛋打进碗里。</li>
+                        <li><strong>主语 + 把 + 宾语 + 动词 + 在 + 地点</strong><br>例如：他把葱放在桌子上。</li>
+                    </ul>
+                    
+                    <h4>常用词汇：</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0;">
+                        <div style="background-color: #e8f5e9; padding: 10px; border-radius: 6px;">
+                            <strong>主语：</strong>我、他、她、妈妈、爸爸、我们、厨师
+                        </div>
+                        <div style="background-color: #e3f2fd; padding: 10px; border-radius: 6px;">
+                            <strong>动词：</strong>放、加、倒、切、打、搅拌、混合
+                        </div>
+                        <div style="background-color: #f3e5f5; padding: 10px; border-radius: 6px;">
+                            <strong>地点：</strong>碗里、盆中、锅里、桌子上、中间、一起
+                        </div>
+                        <div style="background-color: #fff3e0; padding: 10px; border-radius: 6px;">
+                            <strong>其他：</strong>先、然后、再、一起、慢慢、轻轻地
+                        </div>
+                    </div>
+                    
+                    <div class="feedback info" style="margin-top: 20px;">
+                        <span class="icon">💡</span> 提示：确保句子中有明确的位移动作和目的地
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 成功模态框 -->
+        <div class="modal" id="success-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        <span class="icon">🎉</span> 恭喜！
+                    </h3>
+                    <button class="modal-close" id="close-success-modal">&times;</button>
+                </div>
+                <div class="modal-body" style="text-align: center; padding: 30px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🥟</div>
+                    <h2 style="color: var(--success-color); margin-bottom: 15px;">饺子馅调配完成！</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 25px;">
+                        你已经成功调配了美味的饺子馅，使用了所有8种原料！
+                    </p>
+                    <div style="background-color: #f5f5f5; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
+                        <h4>你的成绩：</h4>
+                        <div style="display: flex; justify-content: space-around; margin-top: 15px;">
+                            <div>
+                                <div class="stat-value" id="final-score">0</div>
+                                <div class="stat-label">最终得分</div>
+                            </div>
+                            <div>
+                                <div class="stat-value" id="final-accuracy">0%</div>
+                                <div class="stat-label">准确率</div>
+                            </div>
+                            <div>
+                                <div class="stat-value" id="final-time">0s</div>
+                                <div class="stat-label">用时</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-lg" id="share-result-btn">
+                        <span class="icon">📤</span> 分享结果
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 游戏核心数据
+        const gameState = {
+            // 学生信息
+            student: {
+                name: '',
+                id: '',
+                classCode: '',
+                connected: false
+            },
+            
+            // 游戏状态
+            selectedIngredients: [],
+            addedIngredients: [],
+            currentSentence: [],
+            score: 0,
+            correctCount: 0,
+            totalAttempts: 0,
+            startTime: null,
+            gameActive: false,
+            
+            // 教师状态
+            teacher: {
+                classCode: '',
+                classData: null
+            }
+        };
+        
+        // 原料数据（HSK4级词汇）
+        const ingredients = [
+            { id: 1, name: "猪肉", pinyin: "zhū ròu", emoji: "🥩", desc: "主要肉类原料", color: "#ffcdd2", category: "肉类" },
+            { id: 2, name: "白菜", pinyin: "bái cài", emoji: "🥬", desc: "经典蔬菜原料", color: "#c8e6c9", category: "蔬菜" },
+            { id: 3, name: "鸡蛋", pinyin: "jī dàn", emoji: "🥚", desc: "增加馅料口感", color: "#fff9c4", category: "蛋类" },
+            { id: 4, name: "葱", pinyin: "cōng", emoji: "🧅", desc: "调味必备", color: "#dcedc8", category: "调料" },
+            { id: 5, name: "盐", pinyin: "yán", emoji: "🧂", desc: "调味", color: "#f5f5f5", category: "调料" },
+            { id: 6, name: "油", pinyin: "yóu", emoji: "🫙", desc: "增加香味", color: "#ffcc80", category: "调料" },
+            { id: 7, name: "姜", pinyin: "jiāng", emoji: "🧄", desc: "去腥调味", color: "#ffecb3", category: "调料" },
+            { id: 8, name: "水", pinyin: "shuǐ", emoji: "💧", desc: "调节湿度", color: "#bbdefb", category: "液体" }
+        ];
+        
+        // 句子构建词库
+        const wordBank = {
+            subjects: ["我", "妈妈", "爸爸", "他", "她", "我们", "厨师", "老师", "姐姐", "哥哥"],
+            ba: ["把"],
+            verbs: ["放", "加", "倒", "切", "打", "搅拌", "混合", "放入", "加到", "倒进"],
+            prepositions: ["到", "进", "在", "给"],
+            locations: ["碗里", "盆中", "锅里", "桌子上", "中间", "一起", "馅料里", "容器内"],
+            modifiers: ["先", "然后", "再", "一起", "慢慢", "轻轻地", "仔细地", "快速"],
+            connectors: ["和", "跟", "与"]
+        };
+        
+        // 正确的句子结构模板
+        const correctPatterns = [
+            "subject ba object verb preposition location",
+            "subject ba object verb location",
+            "subject modifier ba object verb preposition location",
+            "subject ba object1 connector object2 verb preposition location"
+        ];
+        
+        // DOM元素
+        const elements = {
+            // 角色切换
+            studentBtn: document.getElementById('student-btn'),
+            teacherBtn: document.getElementById('teacher-btn'),
+            studentView: document.getElementById('student-view'),
+            teacherView: document.getElementById('teacher-view'),
+            
+            // 学生设置
+            studentNameInput: document.getElementById('student-name-input'),
+            classCodeInput: document.getElementById('class-code-input'),
+            studentIdInput: document.getElementById('student-id-input'),
+            joinClassBtn: document.getElementById('join-class-btn'),
+            studentSetupCard: document.getElementById('student-setup-card'),
+            gameInterface: document.getElementById('game-interface'),
+            
+            // 游戏界面
+            ingredientsContainer: document.getElementById('ingredients-container'),
+            selectedIngredients: document.getElementById('selected-ingredients'),
+            wordBank: document.getElementById('word-bank'),
+            sentenceArea: document.getElementById('sentence-area'),
+            validateBtn: document.getElementById('validate-btn'),
+            clearSentenceBtn: document.getElementById('clear-sentence-btn'),
+            hintBtn: document.getElementById('hint-btn'),
+            addIngredientBtn: document.getElementById('add-ingredient-btn'),
+            voiceBtn: document.getElementById('voice-btn'),
+            
+            // 结果区域
+            bowl: document.getElementById('bowl'),
+            resultText: document.getElementById('result-text'),
+            progressText: document.getElementById('progress-text'),
+            progressFill: document.getElementById('progress-fill'),
+            scoreValue: document.getElementById('score-value'),
+            accuracyValue: document.getElementById('accuracy-value'),
+            attemptsValue: document.getElementById('attempts-value'),
+            addedIngredientsList: document.getElementById('added-ingredients-list'),
+            gameFeedback: document.getElementById('game-feedback'),
+            
+            // 教师界面
+            teacherClassCodeInput: document.getElementById('teacher-class-code-input'),
+            createClassBtn: document.getElementById('create-class-btn'),
+            loadClassBtn: document.getElementById('load-class-btn'),
+            exportDataBtn: document.getElementById('export-data-btn'),
+            classInfo: document.getElementById('class-info'),
+            totalStudents: document.getElementById('total-students'),
+            activeStudents: document.getElementById('active-students'),
+            completedStudents: document.getElementById('completed-students'),
+            averageScore: document.getElementById('average-score'),
+            studentListContainer: document.getElementById('student-list-container'),
+            refreshStudentsBtn: document.getElementById('refresh-students-btn'),
+            sortStudentsBtn: document.getElementById('sort-students-btn'),
+            
+            // 模态框
+            grammarHintModal: document.getElementById('grammar-hint-modal'),
+            closeGrammarModal: document.getElementById('close-grammar-modal'),
+            successModal: document.getElementById('success-modal'),
+            closeSuccessModal: document.getElementById('close-success-modal'),
+            finalScore: document.getElementById('final-score'),
+            finalAccuracy: document.getElementById('final-accuracy'),
+            finalTime: document.getElementById('final-time'),
+            shareResultBtn: document.getElementById('share-result-btn'),
+            
+            // 状态显示
+            studentStatus: document.getElementById('student-status'),
+            teacherStatus: document.getElementById('teacher-status'),
+            globalConnectionStatus: document.getElementById('global-connection-status')
+        };
+        
+        // 初始化函数
+        function init() {
+            setupEventListeners();
+            checkExistingSession();
+            updateConnectionStatus();
+            
+            // 模拟连接状态
+            setInterval(updateConnectionStatus, 3000);
+            
+            // 如果教师端有班级代码，自动加载
+            const savedClassCode = localStorage.getItem('teacherClassCode');
+            if (savedClassCode) {
+                elements.teacherClassCodeInput.value = savedClassCode;
+            }
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 角色切换
+            elements.studentBtn.addEventListener('click', () => switchRole('student'));
+            elements.teacherBtn.addEventListener('click', () => switchRole('teacher'));
+            
+            // 学生设置
+            elements.joinClassBtn.addEventListener('click', joinClass);
+            
+            // 游戏界面
+            elements.validateBtn.addEventListener('click', validateSentence);
+            elements.clearSentenceBtn.addEventListener('click', clearSentence);
+            elements.hintBtn.addEventListener('click', showGrammarHint);
+            elements.addIngredientBtn.addEventListener('click', addIngredientsToBowl);
+            elements.voiceBtn.addEventListener('click', speakCurrentSentence);
+            
+            // 教师界面
+            elements.createClassBtn.addEventListener('click', createClass);
+            elements.loadClassBtn.addEventListener('click', loadClass);
+            elements.exportDataBtn.addEventListener('click', exportClassData);
+            elements.refreshStudentsBtn.addEventListener('click', loadStudentData);
+            elements.sortStudentsBtn.addEventListener('click', sortStudentsByScore);
+            
+            // 模态框
+            elements.closeGrammarModal.addEventListener('click', () => {
+                elements.grammarHintModal.style.display = 'none';
+            });
+            
+            elements.closeSuccessModal.addEventListener('click', () => {
+                elements.successModal.style.display = 'none';
+            });
+            
+            elements.shareResultBtn.addEventListener('click', shareResults);
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', (e) => {
+                if (e.target === elements.grammarHintModal) {
+                    elements.grammarHintModal.style.display = 'none';
+                }
+                if (e.target === elements.successModal) {
+                    elements.successModal.style.display = 'none';
+                }
+            });
+            
+            // 允许Enter键加入班级
+            elements.classCodeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') joinClass();
+            });
+            
+            elements.teacherClassCodeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') loadClass();
+            });
+        }
+        
+        // 切换角色
+        function switchRole(role) {
+            if (role === 'student') {
+                elements.studentView.style.display = 'block';
+                elements.teacherView.style.display = 'none';
+                elements.studentBtn.classList.add('active');
+                elements.teacherBtn.classList.remove('active');
+            } else {
+                elements.studentView.style.display = 'none';
+                elements.teacherView.style.display = 'block';
+                elements.teacherBtn.classList.add('active');
+                elements.studentBtn.classList.remove('active');
+                
+                // 如果教师端有班级代码，加载班级数据
+                if (elements.teacherClassCodeInput.value) {
+                    loadClass();
+                }
+            }
+        }
+        
+        // 加入班级
+        function joinClass() {
+            const name = elements.studentNameInput.value.trim();
+            const classCode = elements.classCodeInput.value.trim();
+            const studentId = elements.studentIdInput.value.trim();
+            
+            if (!name) {
+                showFeedback('请输入你的姓名', 'error', 'student');
+                return;
+            }
+            
+            if (!classCode) {
+                showFeedback('请输入班级代码', 'error', 'student');
+                return;
+            }
+            
+            // 检查班级是否存在
+            const classData = localStorage.getItem(`dumpling_class_${classCode}`);
+            if (!classData) {
+                showFeedback('班级代码不存在，请检查或联系老师', 'error', 'student');
+                return;
+            }
+            
+            // 保存学生信息
+            gameState.student = {
+                name: name,
+                id: studentId || `student_${Date.now()}`,
+                classCode: classCode,
+                connected: true
+            };
+            
+            // 保存到本地存储
+            localStorage.setItem('studentInfo', JSON.stringify(gameState.student));
+            
+            // 更新UI
+            elements.studentSetupCard.style.display = 'none';
+            elements.gameInterface.style.display = 'block';
+            
+            // 初始化游戏
+            initGame();
+            
+            // 显示成功消息
+            showFeedback(`成功加入班级 ${classCode}！`, 'success', 'student');
+            
+            // 更新状态
+            elements.studentStatus.innerHTML = `<span class="icon">📡</span> 已连接: ${classCode}`;
+            
+            // 开始游戏计时
+            gameState.startTime = Date.now();
+            gameState.gameActive = true;
+            
+            // 定期同步数据到班级
+            startDataSync();
+        }
+        
+        // 初始化游戏
+        function initGame() {
+            // 清空之前的状态
+            gameState.selectedIngredients = [];
+            gameState.addedIngredients = [];
+            gameState.currentSentence = [];
+            
+            // 初始化原料选择
+            renderIngredients();
+            
+            // 初始化词库
+            renderWordBank();
+            
+            // 初始化句子构建区
+            renderSentenceArea();
+            
+            // 更新进度显示
+            updateProgressDisplay();
+            
+            // 更新分数显示
+            updateScoreDisplay();
+        }
+        
+        // 渲染原料选择
+        function renderIngredients() {
+            elements.ingredientsContainer.innerHTML = '';
+            
+            ingredients.forEach(ingredient => {
+                const ingredientCard = document.createElement('div');
+                ingredientCard.className = 'ingredient-card';
+                ingredientCard.dataset.id = ingredient.id;
+                
+                // 检查是否已添加
+                const isAdded = gameState.addedIngredients.some(item => item.id === ingredient.id);
+                if (isAdded) {
+                    ingredientCard.classList.add('selected');
+                    ingredientCard.style.opacity = '0.6';
+                    ingredientCard.style.cursor = 'not-allowed';
+                }
+                
+                ingredientCard.innerHTML = `
+                    <div class="ingredient-icon" style="background-color: ${ingredient.color}">
+                        ${ingredient.emoji}
+                    </div>
+                    <div class="ingredient-name">${ingredient.name}</div>
+                    <div class="ingredient-pinyin">${ingredient.pinyin}</div>
+                    <div class="ingredient-desc">${ingredient.desc}</div>
+                `;
+                
+                if (!isAdded) {
+                    ingredientCard.addEventListener('click', () => selectIngredient(ingredient));
+                }
+                
+                elements.ingredientsContainer.appendChild(ingredientCard);
+            });
+        }
+        
+        // 选择原料
+        function selectIngredient(ingredient) {
+            // 检查是否已选择
+            const index = gameState.selectedIngredients.findIndex(item => item.id === ingredient.id);
+            
+            if (index === -1) {
+                // 最多选择3种
+                if (gameState.selectedIngredients.length >= 3) {
+                    showFeedback('最多只能选择3种原料', 'warning', 'student');
+                    return;
+                }
+                
+                // 添加到选择列表
+                gameState.selectedIngredients.push(ingredient);
+            } else {
+                // 从选择列表中移除
+                gameState.selectedIngredients.splice(index, 1);
+            }
+            
+            // 更新选择显示
+            updateSelectedIngredientsDisplay();
+            
+            // 更新词库（根据选择的原料调整可用词汇）
+            updateWordBank();
+            
+            // 如果选择了原料，启用添加按钮
+            elements.addIngredientBtn.disabled = gameState.selectedIngredients.length === 0;
+        }
+        
+        // 更新已选择原料显示
+        function updateSelectedIngredientsDisplay() {
+            elements.selectedIngredients.innerHTML = '';
+            
+            if (gameState.selectedIngredients.length === 0) {
+                elements.selectedIngredients.innerHTML = `
+                    <div class="selected-tag placeholder">
+                        请从上方选择1-3种原料
+                    </div>
+                `;
+                return;
+            }
+            
+            gameState.selectedIngredients.forEach(ingredient => {
+                const tag = document.createElement('div');
+                tag.className = 'selected-tag';
+                tag.innerHTML = `
+                    ${ingredient.emoji} ${ingredient.name}
+                    <span class="remove-btn" data-id="${ingredient.id}">×</span>
+                `;
+                
+                // 添加移除事件
+                const removeBtn = tag.querySelector('.remove-btn');
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = parseInt(e.target.dataset.id);
+                    const index = gameState.selectedIngredients.findIndex(item => item.id === id);
+                    if (index !== -1) {
+                        gameState.selectedIngredients.splice(index, 1);
+                        updateSelectedIngredientsDisplay();
+                        updateWordBank();
+                        elements.addIngredientBtn.disabled = gameState.selectedIngredients.length === 0;
+                    }
+                });
+                
+                elements.selectedIngredients.appendChild(tag);
+            });
+        }
+        
+        // 渲染词库
+        function renderWordBank() {
+            elements.wordBank.innerHTML = '';
+            
+            // 添加主语
+            wordBank.subjects.forEach(subject => {
+                const wordItem = createWordItem(subject, 'subject');
+                elements.wordBank.appendChild(wordItem);
+            });
+            
+            // 添加"把"
+            const baItem = createWordItem('把', 'ba');
+            elements.wordBank.appendChild(baItem);
+            
+            // 添加动词
+            wordBank.verbs.forEach(verb => {
+                const wordItem = createWordItem(verb, 'verb');
+                elements.wordBank.appendChild(wordItem);
+            });
+            
+            // 添加介词
+            wordBank.prepositions.forEach(preposition => {
+                const wordItem = createWordItem(preposition, 'preposition');
+                elements.wordBank.appendChild(wordItem);
+            });
+            
+            // 添加地点
+            wordBank.locations.forEach(location => {
+                const wordItem = createWordItem(location, 'location');
+                elements.wordBank.appendChild(wordItem);
+            });
+            
+            // 添加修饰语
+            wordBank.modifiers.forEach(modifier => {
+                const wordItem = createWordItem(modifier, 'modifier');
+                elements.wordBank.appendChild(wordItem);
+            });
+            
+            // 添加连接词
+            wordBank.connectors.forEach(connector => {
+                const wordItem = createWordItem(connector, 'connector');
+                elements.wordBank.appendChild(wordItem);
+            });
+        }
+        
+        // 创建词语项
+        function createWordItem(text, type) {
+            const wordItem = document.createElement('div');
+            wordItem.className = 'word-item';
+            wordItem.textContent = text;
+            wordItem.dataset.type = type;
+            wordItem.draggable = true;
+            
+            // 添加拖拽事件
+            wordItem.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', JSON.stringify({ text, type }));
+                wordItem.style.opacity = '0.5';
+            });
+            
+            wordItem.addEventListener('dragend', () => {
+                wordItem.style.opacity = '1';
+            });
+            
+            // 添加点击事件（作为拖拽的替代）
+            wordItem.addEventListener('click', () => {
+                addWordToSentence(text, type);
+            });
+            
+            return wordItem;
+        }
+        
+        // 更新词库（根据选择的原料调整）
+        function updateWordBank() {
+            // 如果有选择原料，添加宾语词
+            const wordItems = elements.wordBank.querySelectorAll('.word-item');
+            wordItems.forEach(item => {
+                if (item.dataset.type === 'object') {
+                    item.remove();
+                }
+            });
+            
+            if (gameState.selectedIngredients.length > 0) {
+                // 创建宾语词
+                let objectText = '';
+                if (gameState.selectedIngredients.length === 1) {
+                    objectText = gameState.selectedIngredients[0].name;
+                } else {
+                    const names = gameState.selectedIngredients.map(ing => ing.name);
+                    objectText = names.slice(0, -1).join('、') + '和' + names[names.length - 1];
+                }
+                
+                const objectItem = createWordItem(objectText, 'object');
+                elements.wordBank.insertBefore(objectItem, elements.wordBank.querySelector('[data-type="ba"]'));
+            }
+        }
+        
+        // 渲染句子构建区
+        function renderSentenceArea() {
+            elements.sentenceArea.innerHTML = '';
+            
+            // 清空当前句子
+            gameState.currentSentence = [];
+            
+            // 添加占位符
+            const placeholders = ['主语', '把', '宾语', '动词', '其他成分'];
+            placeholders.forEach((placeholder, index) => {
+                const placeholderDiv = document.createElement('div');
+                placeholderDiv.className = 'sentence-word placeholder';
+                placeholderDiv.textContent = placeholder;
+                placeholderDiv.dataset.index = index;
+                
+                // 允许拖放
+                placeholderDiv.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    placeholderDiv.style.backgroundColor = '#f0f0f0';
+                });
+                
+                placeholderDiv.addEventListener('dragleave', () => {
+                    placeholderDiv.style.backgroundColor = '';
+                });
+                
+                placeholderDiv.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    placeholderDiv.style.backgroundColor = '';
+                    
+                    try {
+                        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                        addWordToSentence(data.text, data.type, parseInt(placeholderDiv.dataset.index));
+                    } catch (err) {
+                        console.error('拖放数据解析错误:', err);
+                    }
+                });
+                
+                // 点击移除
+                placeholderDiv.addEventListener('click', () => {
+                    if (!placeholderDiv.classList.contains('placeholder')) {
+                        removeWordFromSentence(parseInt(placeholderDiv.dataset.index));
+                    }
+                });
+                
+                elements.sentenceArea.appendChild(placeholderDiv);
+            });
+            
+            // 启用拖放
+            elements.sentenceArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            
+            elements.sentenceArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const rect = elements.sentenceArea.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                
+                // 计算放置位置
+                const children = Array.from(elements.sentenceArea.children);
+                let insertIndex = children.length;
+                
+                for (let i = 0; i < children.length; i++) {
+                    const childRect = children[i].getBoundingClientRect();
+                    const childCenter = childRect.left - rect.left + childRect.width / 2;
+                    
+                    if (x < childCenter) {
+                        insertIndex = i;
+                        break;
+                    }
+                }
+                
+                try {
+                    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                    addWordToSentence(data.text, data.type, insertIndex);
+                } catch (err) {
+                    console.error('拖放数据解析错误:', err);
+                }
+            });
+        }
+        
+        // 添加词语到句子
+        function addWordToSentence(text, type, index = null) {
+            // 如果指定了索引，在该位置插入
+            if (index !== null && index >= 0 && index <= gameState.currentSentence.length) {
+                gameState.currentSentence.splice(index, 0, { text, type });
+            } else {
+                // 否则添加到末尾
+                gameState.currentSentence.push({ text, type });
+            }
+            
+            // 更新句子显示
+            updateSentenceDisplay();
+        }
+        
+        // 从句子中移除词语
+        function removeWordFromSentence(index) {
+            if (index >= 0 && index < gameState.currentSentence.length) {
+                gameState.currentSentence.splice(index, 1);
+                updateSentenceDisplay();
+            }
+        }
+        
+        // 更新句子显示
+        function updateSentenceDisplay() {
+            // 清空句子区域
+            elements.sentenceArea.innerHTML = '';
+            
+            if (gameState.currentSentence.length === 0) {
+                // 显示占位符
+                const placeholders = ['主语', '把', '宾语', '动词', '其他成分'];
+                placeholders.forEach((placeholder, index) => {
+                    const placeholderDiv = document.createElement('div');
+                    placeholderDiv.className = 'sentence-word placeholder';
+                    placeholderDiv.textContent = placeholder;
+                    placeholderDiv.dataset.index = index;
+                    
+                    // 添加事件监听器（与renderSentenceArea中相同）
+                    setupPlaceholderEvents(placeholderDiv);
+                    
+                    elements.sentenceArea.appendChild(placeholderDiv);
+                });
+            } else {
+                // 显示当前句子
+                gameState.currentSentence.forEach((word, index) => {
+                    const wordDiv = document.createElement('div');
+                    wordDiv.className = 'sentence-word';
+                    wordDiv.textContent = word.text;
+                    wordDiv.dataset.index = index;
+                    wordDiv.dataset.type = word.type;
+                    
+                    // 点击移除
+                    wordDiv.addEventListener('click', () => {
+                        removeWordFromSentence(index);
+                    });
+                    
+                    elements.sentenceArea.appendChild(wordDiv);
+                });
+                
+                // 在末尾添加一个额外的占位符
+                const placeholderDiv = document.createElement('div');
+                placeholderDiv.className = 'sentence-word placeholder';
+                placeholderDiv.textContent = '+';
+                placeholderDiv.dataset.index = gameState.currentSentence.length;
+                setupPlaceholderEvents(placeholderDiv);
+                elements.sentenceArea.appendChild(placeholderDiv);
+            }
+            
+            // 重新启用拖放
+            elements.sentenceArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            
+            elements.sentenceArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const rect = elements.sentenceArea.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const children = Array.from(elements.sentenceArea.children);
+                let insertIndex = children.length - 1; // 最后一个占位符前
+                
+                for (let i = 0; i < children.length; i++) {
+                    const childRect = children[i].getBoundingClientRect();
+                    const childCenter = childRect.left - rect.left + childRect.width / 2;
+                    
+                    if (x < childCenter) {
+                        insertIndex = i;
+                        break;
+                    }
+                }
+                
+                try {
+                    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                    addWordToSentence(data.text, data.type, insertIndex);
+                } catch (err) {
+                    console.error('拖放数据解析错误:', err);
+                }
+            });
+        }
+        
+        // 设置占位符事件
+        function setupPlaceholderEvents(element) {
+            element.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                element.style.backgroundColor = '#f0f0f0';
+            });
+            
+            element.addEventListener('dragleave', () => {
+                element.style.backgroundColor = '';
+            });
+            
+            element.addEventListener('drop', (e) => {
+                e.preventDefault();
+                element.style.backgroundColor = '';
+                
+                try {
+                    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                    addWordToSentence(data.text, data.type, parseInt(element.dataset.index));
+                } catch (err) {
+                    console.error('拖放数据解析错误:', err);
+                }
+            });
+        }
+        
+        // 清空句子
+        function clearSentence() {
+            gameState.currentSentence = [];
+            updateSentenceDisplay();
+            showFeedback('句子已清空', 'info', 'student');
+        }
+        
+        // 验证句子
+        function validateSentence() {
+            if (gameState.currentSentence.length === 0) {
+                showFeedback('请先构建一个句子', 'warning', 'student');
+                return;
+            }
+            
+            if (gameState.selectedIngredients.length === 0) {
+                showFeedback('请先选择原料', 'warning', 'student');
+                return;
+            }
+            
+            gameState.totalAttempts++;
+            
+            // 构建句子文本
+            const sentenceText = gameState.currentSentence.map(word => word.text).join('');
+            
+            // 验证句子
+            const validation = validateSentenceStructure(gameState.currentSentence);
+            
+            if (validation.isValid) {
+                // 句子正确
+                gameState.correctCount++;
+                showFeedback('✓ 句子正确！点击"添加到碗中"按钮添加原料', 'success', 'student');
+                
+                // 启用添加按钮
+                elements.addIngredientBtn.disabled = false;
+                elements.addIngredientBtn.classList.add('pulse');
+                
+                // 更新分数
+                gameState.score += 10;
+                updateScoreDisplay();
+                
+                // 保存正确的句子
+                gameState.validatedSentence = {
+                    text: sentenceText,
+                    ingredients: [...gameState.selectedIngredients]
+                };
+            } else {
+                // 句子有错误
+                showFeedback(`句子不正确：${validation.error}`, 'error', 'student');
+                updateScoreDisplay();
+            }
+            
+            // 同步数据
+            syncStudentData();
+        }
+        
+        // 验证句子结构
+        function validateSentenceStructure(sentence) {
+            // 转换为类型数组
+            const types = sentence.map(word => word.type);
+            const text = sentence.map(word => word.text).join('');
+            
+            // 基本检查
+            if (types.length < 4) {
+                return { isValid: false, error: '句子太短，缺少必要成分' };
+            }
+            
+            // 检查是否包含"把"
+            if (!types.includes('ba')) {
+                return { isValid: false, error: '句子中缺少"把"字' };
+            }
+            
+            // 检查是否包含主语
+            if (!types.includes('subject')) {
+                return { isValid: false, error: '句子中缺少主语' };
+            }
+            
+            // 检查是否包含动词
+            if (!types.includes('verb')) {
+                return { isValid: false, error: '句子中缺少动词' };
+            }
+            
+            // 检查是否包含宾语（如果有选择原料）
+            if (gameState.selectedIngredients.length > 0 && !types.includes('object')) {
+                return { isValid: false, error: '句子中没有提到选择的原料' };
+            }
+            
+            // 检查"把"的位置是否合理
+            const baIndex = types.indexOf('ba');
+            const subjectIndex = types.indexOf('subject');
+            
+            if (baIndex <= subjectIndex) {
+                return { isValid: false, error: '"把"字应该在主语后面' };
+            }
+            
+            // 检查宾语是否在"把"后面
+            if (types.includes('object')) {
+                const objectIndex = types.indexOf('object');
+                if (objectIndex <= baIndex) {
+                    return { isValid: false, error: '宾语应该在"把"字后面' };
+                }
+            }
+            
+            // 检查动词位置
+            const verbIndex = types.indexOf('verb');
+            if (verbIndex <= baIndex) {
+                return { isValid: false, error: '动词应该在"把"字后面' };
+            }
+            
+            // 检查是否包含位移成分（介词+地点或直接地点）
+            const hasPreposition = types.includes('preposition');
+            const hasLocation = types.includes('location');
+            
+            if (!hasLocation) {
+                return { isValid: false, error: '位移把字句需要指明地点' };
+            }
+            
+            // 如果句子基本正确，进一步检查语义
+            const locationIndex = types.indexOf('location');
+            if (verbIndex >= locationIndex) {
+                return { isValid: false, error: '地点应该在动词后面' };
+            }
+            
+            // 检查选择的原料是否都在句子中提到
+            if (gameState.selectedIngredients.length > 0 && types.includes('object')) {
+                const objectWord = sentence.find(word => word.type === 'object');
+                const objectText = objectWord.text;
+                
+                for (const ingredient of gameState.selectedIngredients) {
+                    if (!objectText.includes(ingredient.name)) {
+                        return { isValid: false, error: `句子中没有提到原料"${ingredient.name}"` };
+                    }
+                }
+            }
+            
+            return { isValid: true, error: null };
+        }
+        
+        // 添加原料到碗中
+        function addIngredientsToBowl() {
+            if (!gameState.validatedSentence) {
+                showFeedback('请先验证句子', 'warning', 'student');
+                return;
+            }
+            
+            // 添加原料到碗中
+            gameState.selectedIngredients.forEach(ingredient => {
+                // 检查是否已添加
+                if (!gameState.addedIngredients.some(item => item.id === ingredient.id)) {
+                    gameState.addedIngredients.push({
+                        ...ingredient,
+                        sentence: gameState.validatedSentence.text,
+                        addedAt: new Date().toISOString()
+                    });
+                    
+                    // 在碗中显示原料
+                    addIngredientToBowlVisual(ingredient);
+                }
+            });
+            
+            // 清空选择
+            gameState.selectedIngredients = [];
+            gameState.validatedSentence = null;
+            
+            // 更新显示
+            updateSelectedIngredientsDisplay();
+            updateWordBank();
+            clearSentence();
+            updateAddedIngredientsList();
+            updateProgressDisplay();
+            
+            // 禁用添加按钮
+            elements.addIngredientBtn.disabled = true;
+            elements.addIngredientBtn.classList.remove('pulse');
+            
+            // 显示成功消息
+            showFeedback('原料已成功添加到碗中！', 'success', 'student');
+            
+            // 检查是否完成
+            if (gameState.addedIngredients.length >= ingredients.length) {
+                showCompletionModal();
+            }
+            
+            // 同步数据
+            syncStudentData();
+            
+            // 重新渲染原料（更新已添加状态）
+            renderIngredients();
+        }
+        
+        // 在碗中显示原料（视觉）
+        function addIngredientToBowlVisual(ingredient) {
+            const ingredientInBowl = document.createElement('div');
+            ingredientInBowl.className = 'ingredient-in-bowl';
+            ingredientInBowl.textContent = ingredient.emoji;
+            ingredientInBowl.title = ingredient.name;
+            
+            // 随机位置（避免完全重叠）
+            const size = 35 + Math.random() * 25;
+            const x = 20 + Math.random() * 160;
+            const y = 20 + Math.random() * 160;
+            
+            ingredientInBowl.style.width = `${size}px`;
+            ingredientInBowl.style.height = `${size}px`;
+            ingredientInBowl.style.left = `${x}px`;
+            ingredientInBowl.style.top = `${y}px`;
+            ingredientInBowl.style.fontSize = `${size * 0.7}px`;
+            ingredientInBowl.style.lineHeight = `${size}px`;
+            ingredientInBowl.style.backgroundColor = ingredient.color;
+            ingredientInBowl.style.zIndex = gameState.addedIngredients.length;
+            
+            elements.bowl.appendChild(ingredientInBowl);
+            
+            // 当碗中有原料时，添加填充效果
+            if (gameState.addedIngredients.length > 0) {
+                elements.bowl.classList.add('filled');
+            }
+            
+            // 更新结果文本
+            updateResultText();
+        }
+        
+        // 更新结果文本
+        function updateResultText() {
+            const count = gameState.addedIngredients.length;
+            const total = ingredients.length;
+            
+            if (count === 0) {
+                elements.resultText.textContent = '碗是空的，开始添加原料调配饺子馅吧！';
+                return;
+            }
+            
+            if (count < 3) {
+                const ingredientNames = gameState.addedIngredients.map(item => item.name).join('、');
+                elements.resultText.textContent = `已经开始调配饺子馅！添加了：${ingredientNames}。`;
+                return;
+            }
+            
+            if (count < total) {
+                const ingredientNames = gameState.addedIngredients.map(item => item.name).join('、');
+                elements.resultText.textContent = `饺子馅越来越丰富了！已经添加了：${ingredientNames}。`;
+                return;
+            }
+            
+            // 所有原料都添加了
+            elements.resultText.innerHTML = `
+                <strong>恭喜！饺子馅调配完成！</strong><br>
+                你调配的饺子馅包含：${gameState.addedIngredients.map(item => item.name).join('、')}。<br>
+                <span style="color: var(--success-color);">现在可以开始包饺子了！</span>
+            `;
+        }
+        
+        // 更新已添加原料列表
+        function updateAddedIngredientsList() {
+            if (gameState.addedIngredients.length === 0) {
+                elements.addedIngredientsList.innerHTML = `
+                    <p style="color: var(--text-light); text-align: center; padding: 20px;">
+                        还没有添加任何原料
+                    </p>
+                `;
+                return;
+            }
+            
+            let listHTML = '<ul style="margin: 0; padding: 0;">';
+            gameState.addedIngredients.forEach((item, index) => {
+                listHTML += `
+                    <li style="display: flex; align-items: center; padding: 10px; margin-bottom: 8px; 
+                         background-color: #f9f9f9; border-radius: 8px; border-left: 4px solid ${item.color};">
+                        <div style="font-size: 1.5rem; margin-right: 15px;">${item.emoji}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold;">${item.name} <span style="color: var(--text-light); font-size: 0.9em;">(${item.pinyin})</span></div>
+                            <div style="color: var(--text-light); font-size: 0.9em;">${item.sentence}</div>
+                        </div>
+                        <div style="color: var(--text-light); font-size: 0.8em;">#${index + 1}</div>
+                    </li>
+                `;
+            });
+            listHTML += '</ul>';
+            
+            elements.addedIngredientsList.innerHTML = listHTML;
+        }
+        
+        // 更新进度显示
+        function updateProgressDisplay() {
+            const count = gameState.addedIngredients.length;
+            const total = ingredients.length;
+            const percentage = Math.min(100, (count / total) * 100);
+            
+            elements.progressText.textContent = `${count}/${total}`;
+            elements.progressFill.style.width = `${percentage}%`;
+        }
+        
+        // 更新分数显示
+        function updateScoreDisplay() {
+            elements.scoreValue.textContent = gameState.score;
+            
+            const accuracy = gameState.totalAttempts > 0 
+                ? Math.round((gameState.correctCount / gameState.totalAttempts) * 100) 
+                : 0;
+            elements.accuracyValue.textContent = `${accuracy}%`;
+            
+            elements.attemptsValue.textContent = gameState.totalAttempts;
+        }
+        
+        // 显示语法提示
+        function showGrammarHint() {
+            elements.grammarHintModal.style.display = 'flex';
+        }
+        
+        // 显示完成模态框
+        function showCompletionModal() {
+            // 计算用时
+            const timeUsed = Math.round((Date.now() - gameState.startTime) / 1000);
+            const minutes = Math.floor(timeUsed / 60);
+            const seconds = timeUsed % 60;
+            
+            elements.finalScore.textContent = gameState.score;
+            elements.finalAccuracy.textContent = `${Math.round((gameState.correctCount / gameState.totalAttempts) * 100)}%`;
+            elements.finalTime.textContent = `${minutes > 0 ? `${minutes}分` : ''}${seconds}秒`;
+            
+            elements.successModal.style.display = 'flex';
+            
+            // 停止游戏
+            gameState.gameActive = false;
+        }
+        
+        // 朗读当前句子
+        function speakCurrentSentence() {
+            if (gameState.currentSentence.length === 0) {
+                showFeedback('没有句子可朗读', 'warning', 'student');
+                return;
+            }
+            
+            const sentenceText = gameState.currentSentence.map(word => word.text).join('');
+            
+            // 检查浏览器是否支持语音合成
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(sentenceText);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+                
+                showFeedback('正在朗读句子...', 'info', 'student');
+            } else {
+                showFeedback('您的浏览器不支持语音朗读功能', 'error', 'student');
+            }
+        }
+        
+        // 分享结果
+        function shareResults() {
+            const resultText = `我完成了饺子馅调配游戏！得分：${gameState.score}，使用了所有8种原料！`;
+            
+            // 检查是否支持Web Share API
+            if (navigator.share) {
+                navigator.share({
+                    title: '饺子馅调配游戏成绩',
+                    text: resultText,
+                    url: window.location.href
+                }).catch(err => {
+                    console.log('分享失败:', err);
+                    copyToClipboard(resultText);
+                });
+            } else {
+                copyToClipboard(resultText);
+            }
+        }
+        
+        // 复制到剪贴板
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showFeedback('成绩已复制到剪贴板！', 'success', 'student');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                showFeedback('复制失败，请手动复制', 'error', 'student');
+            });
+        }
+        
+        // 教师端：创建班级
+        function createClass() {
+            const classCode = elements.teacherClassCodeInput.value.trim() || generateClassCode();
+            
+            if (!classCode) {
+                showFeedback('请输入班级代码', 'error', 'teacher');
+                return;
+            }
+            
+            // 检查班级是否已存在
+            const existingClass = localStorage.getItem(`dumpling_class_${classCode}`);
+            if (existingClass) {
+                if (!confirm(`班级代码 "${classCode}" 已存在，是否加载现有班级？`)) {
+                    return;
+                }
+            }
+            
+            // 创建新班级
+            const classData = {
+                code: classCode,
+                name: `饺子课 ${new Date().toLocaleDateString()}`,
+                created: new Date().toISOString(),
+                teacher: '老师',
+                students: {},
+                settings: {
+                    maxIngredients: 8,
+                    timeLimit: null,
+                    allowRetry: true
+                }
+            };
+            
+            localStorage.setItem(`dumpling_class_${classCode}`, JSON.stringify(classData));
+            localStorage.setItem('teacherClassCode', classCode);
+            
+            // 更新UI
+            elements.teacherClassCodeInput.value = classCode;
+            gameState.teacher.classCode = classCode;
+            gameState.teacher.classData = classData;
+            
+            // 显示班级信息
+            elements.classInfo.style.display = 'block';
+            
+            // 加载学生数据
+            loadStudentData();
+            
+            showFeedback(`班级 "${classCode}" 创建成功！`, 'success', 'teacher');
+        }
+        
+        // 生成班级代码
+        function generateClassCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+        
+        // 教师端：加载班级
+        function loadClass() {
+            const classCode = elements.teacherClassCodeInput.value.trim();
+            
+            if (!classCode) {
+                showFeedback('请输入班级代码', 'error', 'teacher');
+                return;
+            }
+            
+            // 加载班级数据
+            const classData = localStorage.getItem(`dumpling_class_${classCode}`);
+            if (!classData) {
+                showFeedback(`班级代码 "${classCode}" 不存在`, 'error', 'teacher');
+                return;
+            }
+            
+            // 解析班级数据
+            gameState.teacher.classCode = classCode;
+            gameState.teacher.classData = JSON.parse(classData);
+            
+            // 保存班级代码
+            localStorage.setItem('teacherClassCode', classCode);
+            
+            // 更新UI
+            elements.classInfo.style.display = 'block';
+            
+            // 加载学生数据
+            loadStudentData();
+            
+            showFeedback(`班级 "${classCode}" 加载成功！`, 'success', 'teacher');
+            
+            // 开始定期刷新
+            startTeacherRefresh();
+        }
+        
+        // 教师端：加载学生数据
+        function loadStudentData() {
+            if (!gameState.teacher.classCode) return;
+            
+            // 重新加载班级数据
+            const classData = localStorage.getItem(`dumpling_class_${gameState.teacher.classCode}`);
+            if (!classData) {
+                elements.studentListContainer.innerHTML = `
+                    <div class="card" style="text-align: center; padding: 40px;">
+                        <p style="color: var(--danger-color);">班级数据不存在或已删除</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            gameState.teacher.classData = JSON.parse(classData);
+            const students = gameState.teacher.classData.students;
+            const studentKeys = Object.keys(students);
+            
+            // 更新班级概览
+            elements.totalStudents.textContent = studentKeys.length;
+            
+            let activeCount = 0;
+            let completedCount = 0;
+            let totalScore = 0;
+            
+            // 计算活跃和完成的学生
+            studentKeys.forEach(key => {
+                const student = students[key];
+                totalScore += student.score || 0;
+                
+                // 如果学生最近5分钟内有活动，视为活跃
+                const lastActive = student.lastUpdated ? new Date(student.lastUpdated) : null;
+                const now = new Date();
+                const isActive = lastActive && (now - lastActive) < 5 * 60 * 1000;
+                
+                if (isActive) activeCount++;
+                
+                // 如果学生完成了所有原料，视为完成
+                if (student.progress >= 8) completedCount++;
+            });
+            
+            elements.activeStudents.textContent = activeCount;
+            elements.completedStudents.textContent = completedCount;
+            elements.averageScore.textContent = studentKeys.length > 0 
+                ? Math.round(totalScore / studentKeys.length) 
+                : 0;
+            
+            // 更新学生列表
+            updateStudentList(students);
+        }
+        
+        // 更新学生列表
+        function updateStudentList(students) {
+            elements.studentListContainer.innerHTML = '';
+            
+            const studentKeys = Object.keys(students);
+            
+            if (studentKeys.length === 0) {
+                elements.studentListContainer.innerHTML = `
+                    <div class="card" style="text-align: center; padding: 40px;">
+                        <p style="color: var(--text-light);">还没有学生加入班级</p>
+                        <p style="color: var(--text-light); font-size: 0.9em; margin-top: 10px;">
+                            将班级代码告诉学生，让他们加入吧！
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 按最后更新时间排序（最新的在前）
+            studentKeys.sort((a, b) => {
+                const timeA = students[a].lastUpdated ? new Date(students[a].lastUpdated) : new Date(0);
+                const timeB = students[b].lastUpdated ? new Date(students[b].lastUpdated) : new Date(0);
+                return timeB - timeA;
+            });
+            
+            // 创建学生卡片
+            studentKeys.forEach(key => {
+                const student = students[key];
+                const lastActive = student.lastUpdated ? new Date(student.lastUpdated) : null;
+                const now = new Date();
+                const isActive = lastActive && (now - lastActive) < 5 * 60 * 1000;
+                const isCompleted = student.progress >= 8;
+                
+                let statusClass = 'inactive';
+                let statusText = '离线';
+                
+                if (isCompleted) {
+                    statusClass = 'completed';
+                    statusText = '已完成';
+                } else if (isActive) {
+                    statusClass = 'active';
+                    statusText = '活跃';
+                }
+                
+                const progressPercent = Math.round((student.progress || 0) / 8 * 100);
+                
+                // 创建学生卡片
+                const studentCard = document.createElement('div');
+                studentCard.className = `student-card ${statusClass}`;
+                
+                studentCard.innerHTML = `
+                    <div class="student-header">
+                        <div class="student-name">
+                            <span class="icon">👤</span> ${student.name}
+                            ${student.id ? `<span style="color: var(--text-light); font-size: 0.9em;">(${student.id})</span>` : ''}
+                        </div>
+                        <div class="student-status status-${statusClass}">
+                            ${statusText}
+                        </div>
+                    </div>
+                    
+                    <div class="student-progress-bar">
+                        <div class="student-progress-fill" style="width: ${progressPercent}%"></div>
+                    </div>
+                    
+                    <div class="student-details">
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: var(--primary-color);">
+                                ${student.score || 0}
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-light);">得分</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: var(--info-color);">
+                                ${student.progress || 0}/8
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-light);">原料</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: var(--success-color);">
+                                ${student.correctCount || 0}
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-light);">正确句子</div>
+                        </div>
+                    </div>
+                    
+                    ${student.addedIngredients && student.addedIngredients.length > 0 ? `
+                        <div class="student-ingredients">
+                            <strong>最近添加的原料：</strong>
+                            <ul>
+                                ${student.addedIngredients.slice(-3).map(item => `
+                                    <li>${item.emoji} ${item.name}: "${item.sentence || '无句子'}"</li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="timestamp" style="margin-top: 10px;">
+                        最后更新: ${lastActive ? lastActive.toLocaleTimeString() : '从未'}
+                    </div>
+                `;
+                
+                elements.studentListContainer.appendChild(studentCard);
+            });
+        }
+        
+        // 按得分排序学生
+        function sortStudentsByScore() {
+            if (!gameState.teacher.classData) return;
+            
+            const students = gameState.teacher.classData.students;
+            const studentKeys = Object.keys(students);
+            
+            // 按得分排序（降序）
+            studentKeys.sort((a, b) => {
+                const scoreA = students[a].score || 0;
+                const scoreB = students[b].score || 0;
+                return scoreB - scoreA;
+            });
+            
+            // 更新显示
+            const sortedStudents = {};
+            studentKeys.forEach(key => {
+                sortedStudents[key] = students[key];
+            });
+            
+            updateStudentList(sortedStudents);
+            showFeedback('已按得分排序', 'info', 'teacher');
+        }
+        
+        // 导出班级数据
+        function exportClassData() {
+            if (!gameState.teacher.classData) {
+                showFeedback('请先加载班级', 'error', 'teacher');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(gameState.teacher.classData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `饺子课_${gameState.teacher.classCode}_${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showFeedback('班级数据已导出', 'success', 'teacher');
+        }
+        
+        // 同步学生数据到班级
+        function syncStudentData() {
+            if (!gameState.student.connected || !gameState.student.classCode) return;
+            
+            // 加载班级数据
+            const classData = localStorage.getItem(`dumpling_class_${gameState.student.classCode}`);
+            if (!classData) return;
+            
+            const classObj = JSON.parse(classData);
+            
+            // 更新学生数据
+            classObj.students[gameState.student.name] = {
+                name: gameState.student.name,
+                id: gameState.student.id,
+                score: gameState.score,
+                correctCount: gameState.correctCount,
+                totalAttempts: gameState.totalAttempts,
+                addedIngredients: [...gameState.addedIngredients],
+                progress: gameState.addedIngredients.length,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            // 保存回本地存储
+            localStorage.setItem(`dumpling_class_${gameState.student.classCode}`, JSON.stringify(classObj));
+        }
+        
+        // 开始数据同步
+        function startDataSync() {
+            // 每10秒同步一次数据
+            setInterval(() => {
+                if (gameState.student.connected && gameState.gameActive) {
+                    syncStudentData();
+                }
+            }, 10000);
+        }
+        
+        // 开始教师端刷新
+        function startTeacherRefresh() {
+            // 每5秒刷新一次学生数据
+            setInterval(() => {
+                if (elements.teacherView.style.display !== 'none' && gameState.teacher.classCode) {
+                    loadStudentData();
+                }
+            }, 5000);
+        }
+        
+        // 检查现有会话
+        function checkExistingSession() {
+            // 检查是否有保存的学生信息
+            const savedStudent = localStorage.getItem('studentInfo');
+            if (savedStudent) {
+                try {
+                    const studentInfo = JSON.parse(savedStudent);
+                    
+                    // 自动填充表单
+                    elements.studentNameInput.value = studentInfo.name || '';
+                    elements.classCodeInput.value = studentInfo.classCode || '';
+                    elements.studentIdInput.value = studentInfo.id || '';
+                    
+                    // 检查班级是否仍然存在
+                    const classData = localStorage.getItem(`dumpling_class_${studentInfo.classCode}`);
+                    if (classData) {
+                        showFeedback('检测到之前的会话，点击"加入班级"继续游戏', 'info', 'student');
+                    }
+                } catch (err) {
+                    console.error('解析保存的学生信息失败:', err);
+                }
+            }
+        }
+        
+        // 更新连接状态
+        function updateConnectionStatus() {
+            // 模拟随机的连接状态变化（实际应用中应检查真实连接）
+            const statuses = ['connected', 'disconnected', 'connecting'];
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            
+            // 在实际应用中，这里应该检查真实的网络连接状态
+            // 暂时使用随机状态来演示UI变化
+            elements.globalConnectionStatus.className = `connection-status status-${randomStatus}`;
+            elements.globalConnectionStatus.innerHTML = `
+                <span class="icon">${randomStatus === 'connected' ? '🔗' : randomStatus === 'disconnected' ? '🔌' : '🔄'}</span>
+                ${randomStatus === 'connected' ? '已连接' : randomStatus === 'disconnected' ? '已断开' : '连接中'}
+            `;
+        }
+        
+        // 显示反馈消息
+        function showFeedback(message, type, role = 'global') {
+            let feedbackElement;
+            
+            if (role === 'student') {
+                feedbackElement = elements.gameFeedback;
+                feedbackElement.style.display = 'block';
+            } else if (role === 'teacher') {
+                // 教师端使用alert简化
+                alert(`${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'} ${message}`);
+                return;
+            } else {
+                // 全局反馈暂时不实现
+                return;
+            }
+            
+            feedbackElement.textContent = message;
+            feedbackElement.className = `feedback ${type}`;
+            feedbackElement.innerHTML = `
+                <span class="icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+                ${message}
+            `;
+            
+            // 3秒后隐藏
+            setTimeout(() => {
+                feedbackElement.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
