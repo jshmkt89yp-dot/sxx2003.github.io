@@ -1,0 +1,3114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>饺子工坊 - 把字句中文学习游戏</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700;900&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --chinese-red: #c13532;
+            --chinese-red-dark: #9c2b29;
+            --chinese-gold: #e4b04a;
+            --chinese-gold-light: #f0c674;
+            --chinese-blue: #2a5caa;
+            --chinese-blue-light: #3a7bd5;
+            --paper-color: #f5f1e6;
+            --ink-color: #333333;
+            --border-color: #8b7355;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper-color);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e8d9c5' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            color: var(--ink-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+        
+        .chinese-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            color: var(--chinese-red);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 2px;
+        }
+        
+        .chinese-subtitle {
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            color: var(--chinese-blue);
+        }
+        
+        .header-main {
+            background: linear-gradient(to right, var(--chinese-red), var(--chinese-red-dark));
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2.5rem;
+            border-bottom: 8px solid var(--chinese-gold);
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-main::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to right, var(--chinese-gold), var(--chinese-gold-light), var(--chinese-gold));
+        }
+        
+        .header-main::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(to right, var(--chinese-blue), var(--chinese-blue-light));
+        }
+        
+        .dumpling-icon {
+            font-size: 3.5rem;
+            animation: float 3s ease-in-out infinite;
+            color: var(--chinese-gold);
+            filter: drop-shadow(0 0 5px rgba(228, 176, 74, 0.5));
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .paper-card {
+            background-color: var(--paper-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            position: relative;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .paper-card:hover {
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+        
+        .paper-card::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+        
+        .ingredient-card {
+            cursor: pointer;
+            height: 100%;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .ingredient-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid rgba(139, 115, 85, 0.1);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+        
+        .ingredient-card.selected {
+            border-color: var(--chinese-red);
+            background-color: rgba(193, 53, 50, 0.05);
+        }
+        
+        .ingredient-card.selected::after {
+            content: "✓";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background-color: var(--chinese-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .btn-chinese {
+            background: linear-gradient(to bottom, var(--chinese-red), var(--chinese-red-dark));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(193, 53, 50, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-chinese:hover {
+            background: linear-gradient(to bottom, var(--chinese-red-dark), #8a1f1d);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(193, 53, 50, 0.4);
+        }
+        
+        .btn-chinese:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(193, 53, 50, 0.4);
+        }
+        
+        .btn-chinese::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .btn-chinese:hover::after {
+            transform: translateX(100%);
+        }
+        
+        .btn-chinese-secondary {
+            background: linear-gradient(to bottom, var(--chinese-blue), var(--chinese-blue-light));
+            box-shadow: 0 4px 10px rgba(42, 92, 170, 0.3);
+        }
+        
+        .btn-chinese-secondary:hover {
+            background: linear-gradient(to bottom, var(--chinese-blue-light), #295ba0);
+            box-shadow: 0 6px 15px rgba(42, 92, 170, 0.4);
+        }
+        
+        .btn-chinese-outline {
+            background: transparent;
+            border: 2px solid var(--chinese-blue);
+            color: var(--chinese-blue);
+        }
+        
+        .btn-chinese-outline:hover {
+            background: var(--chinese-blue);
+            color: white;
+        }
+        
+        .sentence-option {
+            cursor: pointer;
+            padding: 18px 20px;
+            margin: 12px 0;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1.15rem;
+            transition: all 0.3s ease;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sentence-option:hover {
+            border-color: var(--chinese-blue);
+            background-color: rgba(58, 123, 213, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sentence-option.selected {
+            border-color: var(--chinese-red);
+            background-color: rgba(193, 53, 50, 0.08);
+            box-shadow: 0 5px 15px rgba(193, 53, 50, 0.1);
+        }
+        
+        .sentence-option.correct-answer {
+            border-color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.1);
+        }
+        
+        .sentence-option.wrong-answer {
+            border-color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+        
+        .sentence-option .badge {
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            font-size: 1rem;
+            margin-right: 15px;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .teacher-panel {
+            background-color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .teacher-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(to right, var(--chinese-red), var(--chinese-gold), var(--chinese-blue));
+        }
+        
+        .student-list-item {
+            border-left: 5px solid var(--chinese-blue);
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            background-color: white;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .student-list-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .progress-bar-chinese {
+            background: linear-gradient(to right, var(--chinese-red), var(--chinese-gold));
+            border-radius: 10px;
+        }
+        
+        .score-badge {
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: linear-gradient(to right, var(--chinese-gold), var(--chinese-gold-light));
+            color: var(--chinese-red-dark);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--chinese-gold);
+        }
+        
+        .view {
+            display: none;
+        }
+        
+        .view.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .room-code-display {
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            font-size: 2.5rem;
+            color: var(--chinese-red);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            letter-spacing: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px dashed var(--chinese-red);
+            display: inline-block;
+        }
+        
+        .footer-chinese {
+            background: linear-gradient(to right, var(--chinese-blue), var(--chinese-blue-light));
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            border-top: 6px solid var(--chinese-gold);
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .hsk-badge {
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .hsk-3 {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .hsk-4 {
+            background-color: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        
+        .ingredient-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .ingredient-icon.pork { color: #c13532; }
+        .ingredient-icon.cabbage { color: #28a745; }
+        .ingredient-icon.salt { color: #6c757d; }
+        .ingredient-icon.egg { color: #e4b04a; }
+        .ingredient-icon.noodles { color: #8b7355; }
+        .ingredient-icon.soy-sauce { color: #8B4513; }
+        .ingredient-icon.vinegar { color: #D2691E; }
+        .ingredient-icon.pepper { color: #dc3545; }
+        
+        .wrong-questions-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        
+        .wrong-question-item {
+            background-color: white;
+            border-left: 4px solid #dc3545;
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .wrong-question-item.corrected {
+            border-left-color: #28a745;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: var(--chinese-blue);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 15px;
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            color: var(--chinese-blue-light);
+            transform: translateX(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .dumpling-icon {
+                font-size: 2.5rem;
+            }
+            
+            .room-code-display {
+                font-size: 1.8rem;
+                letter-spacing: 3px;
+            }
+            
+            .sentence-option {
+                padding: 14px 16px;
+                font-size: 1rem;
+            }
+            
+            .paper-card {
+                padding: 1rem;
+            }
+        }
+        
+        /* 新增：错误统计卡片 */
+        .wrong-stats-card {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border: 2px solid #dc3545;
+        }
+        
+        .wrong-stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        /* 新增：错题详情模态框 */
+        .wrong-question-detail {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .wrong-question-detail.corrected {
+            border-left-color: #28a745;
+        }
+        
+        /* 新增：选项卡样式 */
+        .nav-tabs .nav-link {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 600;
+            color: var(--chinese-blue);
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 10px 15px;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--chinese-red);
+            border-bottom: 3px solid var(--chinese-red);
+            background-color: transparent;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--chinese-red-dark);
+            border-bottom: 3px solid rgba(193, 53, 50, 0.3);
+        }
+        
+        /* 新增：二维码样式 */
+        .qr-code-container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .room-link {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+        
+        /* 新增：简化模式指示器 */
+        .simplified-mode-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background-color: #ffc107;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* 新增：房间状态指示器 */
+        .room-status-badge {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+        
+        .room-status-active {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .room-status-inactive {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        /* 新增：学生答案显示样式 */
+        .student-answer {
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+        
+        .student-answer.correct {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+        }
+        
+        .student-answer.wrong {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+        }
+        
+        /* 新增：实时更新指示器 */
+        .realtime-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #28a745;
+            animation: pulse 2s infinite;
+            margin-left: 5px;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .last-updated {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- 简化模式指示器 -->
+    <div id="simplifiedModeBadge" class="simplified-mode-badge d-none">
+        <i class="fas fa-mobile-alt me-1"></i> 简化模式
+    </div>
+    
+    <!-- 主标题区 -->
+    <div class="header-main">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-dumpling-beam dumpling-icon me-3"></i>
+                        <div>
+                            <h1 class="chinese-title mb-1" style="font-size: 2.5rem;">饺子工坊</h1>
+                            <p class="chinese-subtitle mb-0" style="font-size: 1.2rem;">把字句中文学习游戏 • HSK 3-4级语法练习</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div id="roomInfo" class="d-none mt-3 mt-md-0">
+                        <div class="d-inline-block p-2 rounded" style="background-color: rgba(255,255,255,0.9);">
+                            <span class="text-dark me-2"><i class="fas fa-door-open"></i> 房间:</span>
+                            <span id="currentRoomCode" class="fw-bold text-danger">---</span>
+                            <span id="userRoleBadge" class="ms-2"></span>
+                            <span id="realtimeIndicator" class="realtime-indicator" title="实时同步中"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- 视图1: 首页/角色选择 -->
+        <div id="viewHome" class="view active">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="paper-card text-center">
+                        <div class="mb-4">
+                            <i class="fas fa-utensils display-1 text-danger mb-4"></i>
+                            <h2 class="chinese-title mb-3" style="font-size: 2.2rem;">欢迎来到饺子工坊</h2>
+                            <p class="lead mb-4" style="font-size: 1.2rem;">这是一个专为HSK 3-4级学生设计的互动课堂。通过选择饺子原料并完成<strong>"把"字句句子选择</strong>练习，掌握表示位移的"把"字句用法。</p>
+                            <div class="p-3 d-inline-block" style="border: 2px dashed var(--border-color); border-radius: 10px;">
+                                <p class="chinese-subtitle mb-0">请选择您的角色进入课堂：</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-4">
+                                <div class="paper-card h-100">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="fas fa-chalkboard-teacher display-3 text-primary mb-3"></i>
+                                        <h3 class="chinese-title">教师端</h3>
+                                        <p class="text-center mb-3">创建课堂房间，实时监控所有学生的答题进度和得分情况。</p>
+                                        <button id="btnTeacher" class="btn btn-chinese">
+                                            <i class="fas fa-plus-circle me-2"></i>创建新课堂
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="paper-card h-100">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="fas fa-user-graduate display-3 text-success mb-3"></i>
+                                        <h3 class="chinese-title">学生端</h3>
+                                        <p class="text-center mb-3">加入课堂，选择饺子原料，从多个句子中选出<strong>唯一正确</strong>的"把"字句。</p>
+                                        <button id="btnStudent" class="btn btn-chinese btn-chinese-secondary">
+                                            <i class="fas fa-sign-in-alt me-2"></i>加入课堂
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4 text-start">
+                            <div class="col-md-4 mb-3">
+                                <div class="d-flex">
+                                    <div class="me-3 text-danger">
+                                        <i class="fas fa-2x fa-language"></i>
+                                    </div>
+                                    <div>
+                                        <h5>聚焦"位移把字句"</h5>
+                                        <p class="small text-muted mb-0">专门练习"把+宾语+动词+在/到/给+地点"句型</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="d-flex">
+                                    <div class="me-3 text-success">
+                                        <i class="fas fa-2x fa-sync-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h5>实时同步</h5>
+                                        <p class="small text-muted mb-0">教师可实时查看所有学生进度与得分</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="d-flex">
+                                    <div class="me-3 text-warning">
+                                        <i class="fas fa-2x fa-utensils"></i>
+                                    </div>
+                                    <div>
+                                        <h5>HSK 3-4级词汇</h5>
+                                        <p class="small text-muted mb-0">所有原料词汇均来自HSK 3-4级考试范围</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视图2: 教师端 - 创建房间 -->
+        <div id="viewTeacherCreate" class="view">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="teacher-panel">
+                        <a href="#" id="backToHomeFromTeacherCreate" class="back-button">
+                            <i class="fas fa-arrow-left me-2"></i>返回首页
+                        </a>
+                        
+                        <h3 class="mb-4 chinese-title"><i class="fas fa-chalkboard-teacher text-primary me-2"></i>创建新课堂</h3>
+                        
+                        <div class="mb-4">
+                            <label for="teacherName" class="form-label fw-bold">您的姓名</label>
+                            <input type="text" class="form-control form-control-lg" id="teacherName" placeholder="例如: 王老师">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="customRoomCode" class="form-label fw-bold">自定义房间代码 <span class="text-muted">(4-6位字母或数字)</span></label>
+                            <div class="input-group input-group-lg">
+                                <input type="text" class="form-control" id="customRoomCode" placeholder="例如: CHN001" maxlength="6">
+                                <button class="btn btn-chinese-outline" type="button" id="btnGenerateCode">
+                                    <i class="fas fa-random me-1"></i>随机生成
+                                </button>
+                            </div>
+                            <div class="form-text">请设置一个容易记忆的房间代码，学生将使用此代码加入课堂</div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button id="btnCreateRoom" class="btn btn-chinese btn-lg">
+                                <i class="fas fa-door-open me-2"></i>创建课堂房间
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视图3: 教师端 - 房间管理 -->
+        <div id="viewTeacherRoom" class="view">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="teacher-panel">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <a href="#" id="backToHomeFromTeacherRoom" class="back-button">
+                                    <i class="fas fa-arrow-left me-2"></i>返回首页
+                                </a>
+                                <h3 class="mb-1 chinese-title"><i class="fas fa-door-open text-primary me-2"></i>课堂管理面板</h3>
+                                <p class="text-muted mb-0">房间代码: <span class="room-code-display" id="teacherRoomCode">---</span></p>
+                                <div class="last-updated" id="lastUpdatedTime">上次更新: --:--:--</div>
+                            </div>
+                            <div>
+                                <button id="btnEndClass" class="btn btn-chinese">
+                                    <i class="fas fa-stop me-1"></i>结束课堂
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info d-flex align-items-center mb-4">
+                            <i class="fas fa-info-circle me-3 fs-4"></i>
+                            <div>
+                                请让学生访问此页面并输入房间代码 <strong id="roomCodeDisplay">---</strong> 加入课堂。
+                                目前有 <span id="studentCount" class="badge bg-primary">0</span> 名学生在线。
+                                <span class="realtime-indicator ms-2" title="实时同步中"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- 房间分享链接 -->
+                        <div class="paper-card mb-4">
+                            <h5 class="mb-3 chinese-subtitle"><i class="fas fa-share-alt me-2"></i>课堂链接分享</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">学生加入链接</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control room-link" id="roomJoinLink" readonly>
+                                            <button class="btn btn-chinese-outline" type="button" id="btnCopyLink">
+                                                <i class="fas fa-copy me-1"></i>复制
+                                            </button>
+                                        </div>
+                                        <div class="form-text">将此链接发送给学生，学生点击即可直接进入加入页面</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-center">
+                                        <div class="qr-code-container">
+                                            <div id="qrcode"></div>
+                                            <p class="small mt-2">扫码加入课堂</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 教师端选项卡 -->
+                        <ul class="nav nav-tabs mb-4" id="teacherTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="students-tab" data-bs-toggle="tab" data-bs-target="#students-pane" type="button" role="tab">
+                                    <i class="fas fa-users me-1"></i>学生列表
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="wrong-questions-tab" data-bs-toggle="tab" data-bs-target="#wrong-questions-pane" type="button" role="tab">
+                                    <i class="fas fa-exclamation-circle me-1"></i>错题分析
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats-pane" type="button" role="tab">
+                                    <i class="fas fa-chart-bar me-1"></i>课堂统计
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="teacherTabContent">
+                            <!-- 学生列表标签页 -->
+                            <div class="tab-pane fade show active" id="students-pane" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="mb-3 chinese-subtitle"><i class="fas fa-users me-2"></i>学生列表与得分</h5>
+                                        <div id="studentList" class="mb-4">
+                                            <div class="text-center text-muted py-4">
+                                                <i class="fas fa-user-friends fa-2x mb-2"></i>
+                                                <p>等待学生加入...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <h5 class="mb-3 chinese-subtitle"><i class="fas fa-chart-bar me-2"></i>课堂统计</h5>
+                                        <div class="paper-card mb-4">
+                                            <div class="row text-center">
+                                                <div class="col-6 mb-3">
+                                                    <div class="p-3 bg-white rounded-3">
+                                                        <div class="text-primary fs-4 fw-bold" id="statsAvgScore">0</div>
+                                                        <div class="text-muted small">平均得分</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 mb-3">
+                                                    <div class="p-3 bg-white rounded-3">
+                                                        <div class="text-success fs-4 fw-bold" id="statsCompleted">0</div>
+                                                        <div class="text-muted small">已完成</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="paper-card">
+                                            <h6 class="chinese-subtitle">正确率分布</h6>
+                                            <div id="chartContainer" class="p-3">
+                                                <canvas id="studentProgressChart" height="150"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 错题分析标签页 -->
+                            <div class="tab-pane fade" id="wrong-questions-pane" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h5 class="mb-3 chinese-subtitle"><i class="fas fa-exclamation-circle text-danger me-2"></i>学生错题汇总</h5>
+                                        
+                                        <!-- 错题统计 -->
+                                        <div class="row mb-4">
+                                            <div class="col-md-4 mb-3">
+                                                <div class="paper-card wrong-stats-card text-center p-3">
+                                                    <div class="wrong-stats-number" id="wrongQuestionsCount">0</div>
+                                                    <div class="text-muted">错题总数</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <div class="paper-card text-center p-3">
+                                                    <div class="text-primary fs-4 fw-bold" id="wrongQuestionsStudents">0</div>
+                                                    <div class="text-muted">有错题学生</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <div class="paper-card text-center p-3">
+                                                    <div class="text-warning fs-4 fw-bold" id="mostWrongIngredient">无</div>
+                                                    <div class="text-muted">最易错原料</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- 错题列表 -->
+                                        <div id="wrongQuestionsList" class="wrong-questions-container">
+                                            <div class="text-center text-muted py-4">
+                                                <i class="fas fa-clipboard-check fa-2x mb-2"></i>
+                                                <p>暂无错题记录</p>
+                                                <p class="small">学生完成练习后，错题将显示在这里</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <h5 class="mb-3 chinese-subtitle"><i class="fas fa-lightbulb me-2"></i>教学提示</h5>
+                                        <div class="paper-card p-3 mb-4">
+                                            <h6>常见错误类型:</h6>
+                                            <ul class="small text-muted mb-0">
+                                                <li>遗漏"把"字: "我猪肉放到菜板上。"</li>
+                                                <li>宾语位置错误: "把猪肉我放到菜板上。"</li>
+                                                <li>语序错误: "我放到菜板上把猪肉。"</li>
+                                                <li>缺少方位词: "我把猪肉放菜板上。"</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="paper-card p-3">
+                                            <h6 class="text-success">正确句式结构:</h6>
+                                            <p class="mb-1"><strong>把 + 宾语 + 动词 + 在/到/给 + 地点</strong></p>
+                                            <p class="small text-muted mb-0">例如: "我把猪肉放到菜板上。"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 统计标签页 -->
+                            <div class="tab-pane fade" id="stats-pane" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="teacher-panel">
+                                            <h5 class="mb-3 chinese-subtitle"><i class="fas fa-clipboard-list me-2"></i>实时动态</h5>
+                                            <div id="activityFeed" class="activity-feed" style="max-height: 300px; overflow-y: auto;">
+                                                <div class="activity-item p-3 border-bottom">
+                                                    <div class="small text-muted">刚刚</div>
+                                                    <div>您创建了课堂房间</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="teacher-panel">
+                                            <h5 class="mb-3 chinese-subtitle"><i class="fas fa-trophy me-2"></i>排行榜</h5>
+                                            <div id="teacherLeaderboard" class="mb-3">
+                                                <div class="text-center text-muted py-3">
+                                                    <i class="fas fa-chart-line fa-2x mb-2"></i>
+                                                    <p>等待学生完成练习...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视图4: 学生端 - 加入房间 -->
+        <div id="viewStudentJoin" class="view">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="paper-card">
+                        <a href="#" id="backToHomeFromJoin" class="back-button">
+                            <i class="fas fa-arrow-left me-2"></i>返回首页
+                        </a>
+                        
+                        <h3 class="mb-4 text-center chinese-title"><i class="fas fa-sign-in-alt text-success me-2"></i>加入课堂</h3>
+                        
+                        <div class="mb-4">
+                            <label for="studentName" class="form-label fw-bold">你的姓名</label>
+                            <input type="text" class="form-control form-control-lg" id="studentName" placeholder="例如: 小明">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="roomCodeInput" class="form-label fw-bold">房间代码</label>
+                            <input type="text" class="form-control form-control-lg" id="roomCodeInput" placeholder="请输入老师提供的房间代码">
+                            <div class="form-text">请向你的老师获取房间代码</div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button id="btnJoinRoom" class="btn btn-chinese btn-chinese-secondary btn-lg">
+                                <i class="fas fa-door-open me-2"></i>加入课堂
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视图5: 学生端 - 选择原料 -->
+        <div id="viewStudentIngredients" class="view">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="paper-card">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <a href="#" id="backToRoomFromIngredients" class="back-button">
+                                    <i class="fas fa-arrow-left me-2"></i>返回房间
+                                </a>
+                                <h3 class="mb-1 chinese-title"><i class="fas fa-carrot text-warning me-2"></i>选择饺子原料</h3>
+                                <p class="text-muted mb-0">请选择1-3种你想用来包饺子的原料(HSK 3-4级词汇)</p>
+                            </div>
+                            <div>
+                                <span class="score-badge">
+                                    已选: <span id="selectedCount">0</span>/3
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-light mb-4">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-info-circle text-info"></i>
+                                </div>
+                                <div>
+                                    选择原料后，系统会根据你的选择生成<strong>4个完整句子</strong>。其中只有<strong class="text-success">1个</strong>是语法正确的"位移把字句"，请找出它。
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row" id="ingredientsContainer">
+                            <!-- 原料卡片将通过JavaScript动态生成 -->
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                            <button id="btnBackToRoomStudent" class="btn btn-chinese">
+                                <i class="fas fa-arrow-left me-1"></i>返回房间
+                            </button>
+                            <button id="btnProceedToExercise" class="btn btn-chinese" disabled>
+                                开始练习 <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="paper-card mb-4">
+                        <h5 class="mb-3 chinese-subtitle"><i class="fas fa-shopping-basket me-2"></i>已选原料</h5>
+                        <div id="selectedIngredientsList" class="mb-3">
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-utensils fa-2x mb-2"></i>
+                                <p>尚未选择任何原料</p>
+                            </div>
+                        </div>
+                        
+                        <div class="paper-card p-3">
+                            <h6 class="chinese-subtitle"><i class="fas fa-lightbulb me-1"></i>练习说明:</h6>
+                            <p class="mb-1 small">选择原料后，系统会根据你的选择生成<strong>4个完整句子</strong>。</p>
+                            <p class="mb-0 small">其中只有<strong class="text-success">1个</strong>是语法正确的"位移把字句"，请找出它。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-card">
+                        <h5 class="mb-3 chinese-subtitle"><i class="fas fa-language me-2"></i>把字句结构</h5>
+                        <div class="paper-card p-3 mb-3">
+                            <h6 class="text-danger">位移把字句:</h6>
+                            <p class="mb-1"><strong>把 + 东西 + 动词 + 在/到/给 + 地方</strong></p>
+                            <p class="small text-muted mb-0">例如: "我把饺子放在盘子里。"</p>
+                        </div>
+                        
+                        <div class="paper-card p-3">
+                            <h6 class="text-success">练习例句:</h6>
+                            <ul class="small text-muted mb-0">
+                                <li>请把盐<b>放到</b>桌子上。</li>
+                                <li>他把白菜<b>切到</b>碗里。</li>
+                                <li>我把饺子<b>放在</b>盘子里。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视图6: 学生端 - 把字句练习 (连词成句选择题) -->
+        <div id="viewStudentExercise" class="view">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="paper-card">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <a href="#" id="backToIngredientsFromExercise" class="back-button">
+                                    <i class="fas fa-arrow-left me-2"></i>返回原料选择
+                                </a>
+                                <h3 class="mb-1 chinese-title"><i class="fas fa-pencil-alt text-primary me-2"></i>把字句练习</h3>
+                                <p class="text-muted mb-0">从以下句子中选出<strong class="text-success">唯一正确</strong>的位移"把"字句</p>
+                            </div>
+                            <div class="text-end">
+                                <div class="score-badge">
+                                    得分: <span id="currentScore">0</span>/<span id="totalScore">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress mb-4" style="height: 10px;">
+                            <div id="exerciseProgress" class="progress-bar progress-bar-chinese" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        
+                        <!-- 题目展示区 -->
+                        <div id="exerciseContainer">
+                            <!-- 动态生成 -->
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4 pt-4 border-top">
+                            <button id="btnPrevQuestion" class="btn btn-chinese d-none">
+                                <i class="fas fa-arrow-left me-1"></i>上一题
+                            </button>
+                            <div>
+                                <span id="questionCounter" class="text-muted me-3">题目 0/0</span>
+                            </div>
+                            <button id="btnNextQuestion" class="btn btn-chinese">
+                                下一题 <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="paper-card mb-4">
+                        <h5 class="mb-3 chinese-subtitle"><i class="fas fa-clipboard-check me-2"></i>练习进度</h5>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>完成进度</span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                            <div class="progress" style="height: 12px;">
+                                <div id="progressBar" class="progress-bar progress-bar-chinese" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="ingredientReminder" class="paper-card p-3 mb-3">
+                            <h6 class="text-warning chinese-subtitle">你的原料:</h6>
+                            <div id="exerciseIngredients" class="small">
+                                <!-- 已选原料将显示在这里 -->
+                            </div>
+                        </div>
+                        
+                        <div id="feedbackArea"></div>
+                    </div>
+                    
+                    <div class="paper-card">
+                        <h5 class="mb-3 chinese-subtitle"><i class="fas fa-trophy me-2"></i>排行榜</h5>
+                        <div id="leaderboard" class="mb-3">
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                                <p>等待其他同学完成练习...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视图7: 学生端 - 练习完成 -->
+        <div id="viewStudentComplete" class="view">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="paper-card text-center">
+                        <div class="mb-4">
+                            <i class="fas fa-award display-1 text-warning"></i>
+                        </div>
+                        
+                        <h2 class="mb-3 chinese-title" id="completionTitle">练习完成!</h2>
+                        
+                        <div class="mb-4">
+                            <div class="score-badge bg-success d-inline-block fs-2 px-4 py-3 mb-3">
+                                最终得分: <span id="finalScore">0</span>/<span id="finalTotal">0</span>
+                            </div>
+                            <p class="lead" id="completionMessage">你成功完成了所有"把字句"练习!</p>
+                        </div>
+                        
+                        <div class="row justify-content-center mb-4">
+                            <div class="col-md-8">
+                                <div class="paper-card p-4">
+                                    <h5 class="mb-3 chinese-subtitle">学习总结</h5>
+                                    <div class="row text-center">
+                                        <div class="col-6 mb-3">
+                                            <div class="p-3 bg-white rounded-3">
+                                                <div class="text-primary fs-4 fw-bold" id="summaryCorrect">0</div>
+                                                <div class="text-muted small">正确题数</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <div class="p-3 bg-white rounded-3">
+                                                <div class="text-warning fs-4 fw-bold" id="summaryTime">0</div>
+                                                <div class="text-muted small">用时(秒)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-center">
+                            <button id="btnReviewExercise" class="btn btn-chinese me-3">
+                                <i class="fas fa-redo me-1"></i>复习错题
+                            </button>
+                            <button id="btnNewIngredients" class="btn btn-chinese btn-chinese-secondary">
+                                <i class="fas fa-carrot me-1"></i>选择新原料
+                            </button>
+                        </div>
+                        
+                        <div class="mt-5 pt-4 border-top">
+                            <p class="text-muted">你的学习数据已同步给老师。可以继续练习或等待老师的下一步指示。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <div class="footer-chinese">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="chinese-subtitle mb-3">饺子工坊 - 把字句中文学习游戏</h5>
+                    <p class="small mb-0">专为HSK 3-4级留学生设计的交互式语法练习平台。通过句子选择练习，掌握表示位移的"把字句"用法。</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="small mb-0">语法重点: 把 + 宾语 + 动词 + 在/到/给 + 地点</p>
+                    <p class="small mb-0">练习形式: 四选一完整句子判断</p>
+                    <p class="small">可在GitHub Pages静态部署</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
+    <!-- 主要应用逻辑 -->
+    <script>
+        // 饺子工坊课堂管理器 - 改进版本
+        window.DumplingClassrooms = {
+            // 保存当前会话信息到localStorage
+            saveSessionInfo: function(userRole, roomCode, userId, userName) {
+                const sessionInfo = {
+                    userRole: userRole,
+                    roomCode: roomCode,
+                    userId: userId,
+                    userName: userName,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem('dumpling_session_info', JSON.stringify(sessionInfo));
+                console.log("会话信息已保存:", sessionInfo);
+            },
+            
+            // 获取会话信息
+            getSessionInfo: function() {
+                const sessionInfo = localStorage.getItem('dumpling_session_info');
+                if (!sessionInfo) return null;
+                
+                try {
+                    return JSON.parse(sessionInfo);
+                } catch (e) {
+                    console.error("解析会话信息失败:", e);
+                    return null;
+                }
+            },
+            
+            // 清除会话信息
+            clearSessionInfo: function() {
+                localStorage.removeItem('dumpling_session_info');
+            },
+            
+            // 保存教师房间信息
+            saveTeacherRoom: function(roomCode, teacherName) {
+                const teacherRoomInfo = {
+                    roomCode: roomCode,
+                    teacherName: teacherName,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem('dumpling_teacher_room', JSON.stringify(teacherRoomInfo));
+                console.log("教师房间信息已保存:", teacherRoomInfo);
+            },
+            
+            // 获取教师房间信息
+            getTeacherRoom: function() {
+                const teacherRoomInfo = localStorage.getItem('dumpling_teacher_room');
+                if (!teacherRoomInfo) return null;
+                
+                try {
+                    return JSON.parse(teacherRoomInfo);
+                } catch (e) {
+                    console.error("解析教师房间信息失败:", e);
+                    return null;
+                }
+            },
+            
+            // 清除教师房间信息
+            clearTeacherRoom: function() {
+                localStorage.removeItem('dumpling_teacher_room');
+            },
+            
+            // 从URL参数获取房间代码
+            getRoomCodeFromUrl: function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get('room') || '';
+            },
+            
+            // 从URL参数获取房间数据 - 简化版本，避免编码问题
+            getRoomDataFromUrl: function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const roomCode = urlParams.get('room');
+                if (!roomCode) return null;
+                
+                // 直接从localStorage获取房间数据
+                return this.getRoom(roomCode);
+            },
+            
+            // 检查房间是否存在（通过localStorage）
+            roomExists: function(roomCode) {
+                if (!roomCode) return false;
+                
+                const roomInfo = localStorage.getItem('dumpling_room_' + roomCode);
+                if (roomInfo) {
+                    try {
+                        const roomData = JSON.parse(roomInfo);
+                        return roomData && roomData.isActive !== false;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+                
+                return false;
+            },
+            
+            // 创建房间
+            createRoom: function(roomCode, teacherName) {
+                const roomData = {
+                    roomCode: roomCode,
+                    teacherName: teacherName,
+                    teacherId: 'teacher_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    students: {},
+                    createdAt: new Date().toISOString(),
+                    isActive: true,
+                    wrongQuestions: [],
+                    activityLog: [],
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                // 保存到localStorage
+                localStorage.setItem('dumpling_room_' + roomCode, JSON.stringify(roomData));
+                
+                // 记录活动
+                this.addActivityToRoom(roomCode, '系统', `${teacherName} 创建了房间 ${roomCode}`);
+                
+                // 保存教师房间信息
+                this.saveTeacherRoom(roomCode, teacherName);
+                
+                console.log(`房间 ${roomCode} 创建成功，教师: ${teacherName}`);
+                return roomData;
+            },
+            
+            // 获取房间
+            getRoom: function(roomCode) {
+                if (!roomCode) return null;
+                
+                const roomInfo = localStorage.getItem('dumpling_room_' + roomCode);
+                if (!roomInfo) return null;
+                
+                try {
+                    return JSON.parse(roomInfo);
+                } catch (e) {
+                    console.error("解析房间数据失败:", e);
+                    return null;
+                }
+            },
+            
+            // 学生加入房间
+            addStudent: function(roomCode, studentId, studentName) {
+                const room = this.getRoom(roomCode);
+                if (!room) {
+                    throw new Error('房间不存在');
+                }
+                
+                if (!room.isActive) {
+                    throw new Error('房间已关闭');
+                }
+                
+                // 检查学生是否已存在
+                if (room.students[studentId]) {
+                    return room.students[studentId];
+                }
+                
+                // 创建学生数据
+                room.students[studentId] = {
+                    id: studentId,
+                    name: studentName,
+                    status: 'not_started',
+                    score: 0,
+                    selectedIngredients: [],
+                    currentQuestion: 0,
+                    totalQuestions: 0,
+                    startTime: null,
+                    completedTime: null,
+                    answers: [],
+                    wrongQuestions: [],
+                    lastActive: new Date().toISOString()
+                };
+                
+                // 保存更新到localStorage
+                this.saveRoomToStorage(roomCode, room);
+                
+                // 记录活动
+                this.addActivityToRoom(roomCode, '系统', `${studentName} 加入了课堂`);
+                
+                console.log(`学生 ${studentName} 加入房间 ${roomCode}`);
+                return room.students[studentId];
+            },
+            
+            // 更新学生状态
+            updateStudent: function(roomCode, studentId, updates) {
+                const room = this.getRoom(roomCode);
+                if (!room) return false;
+                
+                const student = room.students[studentId];
+                if (!student) return false;
+                
+                // 记录更新前的状态（用于检测变化）
+                const oldStatus = student.status;
+                const oldScore = student.score;
+                
+                Object.assign(student, updates);
+                student.lastActive = new Date().toISOString();
+                
+                // 检测状态变化，记录活动
+                if (updates.status && updates.status !== oldStatus) {
+                    const statusText = {
+                        'not_started': '未开始',
+                        'in_progress': '开始练习',
+                        'completed': '完成练习'
+                    }[updates.status];
+                    
+                    if (statusText) {
+                        this.addActivityToRoom(roomCode, '系统', `${student.name} ${statusText}`);
+                    }
+                }
+                
+                // 检测分数变化
+                if (updates.score !== undefined && updates.score !== oldScore) {
+                    this.addActivityToRoom(roomCode, '系统', `${student.name} 得分更新: ${oldScore} → ${updates.score}`);
+                }
+                
+                this.saveRoomToStorage(roomCode, room);
+                return true;
+            },
+            
+            // 记录学生错题
+            recordWrongQuestion: function(roomCode, studentId, questionData) {
+                const room = this.getRoom(roomCode);
+                if (!room) return false;
+                
+                const student = room.students[studentId];
+                if (!student) return false;
+                
+                // 添加到学生个人错题记录
+                student.wrongQuestions.push({
+                    ...questionData,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // 添加到房间错题汇总
+                if (!room.wrongQuestions) {
+                    room.wrongQuestions = [];
+                }
+                
+                const existingQuestion = room.wrongQuestions.find(q => 
+                    q.question === questionData.question && 
+                    q.correctAnswer === questionData.correctAnswer
+                );
+                
+                if (existingQuestion) {
+                    if (!existingQuestion.studentAnswers) {
+                        existingQuestion.studentAnswers = [];
+                    }
+                    
+                    // 检查是否已有该学生的记录
+                    const existingStudentIndex = existingQuestion.studentAnswers.findIndex(sa => sa.studentId === studentId);
+                    
+                    if (existingStudentIndex === -1) {
+                        existingQuestion.studentAnswers.push({
+                            studentId: studentId,
+                            studentName: student.name,
+                            studentAnswer: questionData.studentAnswer,
+                            isCorrect: questionData.studentAnswer === questionData.correctAnswer
+                        });
+                        existingQuestion.count = (existingQuestion.count || 0) + 1;
+                    } else {
+                        existingQuestion.studentAnswers[existingStudentIndex] = {
+                            studentId: studentId,
+                            studentName: student.name,
+                            studentAnswer: questionData.studentAnswer,
+                            isCorrect: questionData.studentAnswer === questionData.correctAnswer
+                        };
+                    }
+                    existingQuestion.lastUpdated = new Date().toISOString();
+                } else {
+                    room.wrongQuestions.push({
+                        ...questionData,
+                        studentAnswers: [{
+                            studentId: studentId,
+                            studentName: student.name,
+                            studentAnswer: questionData.studentAnswer,
+                            isCorrect: questionData.studentAnswer === questionData.correctAnswer
+                        }],
+                        count: 1,
+                        timestamp: new Date().toISOString(),
+                        lastUpdated: new Date().toISOString()
+                    });
+                }
+                
+                this.saveRoomToStorage(roomCode, room);
+                
+                // 记录活动
+                this.addActivityToRoom(roomCode, '系统', `${student.name} 答错了一道题`);
+                
+                return true;
+            },
+            
+            // 保存房间到storage
+            saveRoomToStorage: function(roomCode, roomData) {
+                roomData.lastUpdated = new Date().toISOString();
+                localStorage.setItem('dumpling_room_' + roomCode, JSON.stringify(roomData));
+                return true;
+            },
+            
+            // 添加活动记录
+            addActivityToRoom: function(roomCode, author, action) {
+                const room = this.getRoom(roomCode);
+                if (!room) return false;
+                
+                if (!room.activityLog) {
+                    room.activityLog = [];
+                }
+                
+                room.activityLog.unshift({
+                    author: author,
+                    action: action,
+                    time: new Date().toISOString(),
+                    displayTime: this.formatTime(new Date())
+                });
+                
+                // 只保留最近的20条记录
+                if (room.activityLog.length > 20) {
+                    room.activityLog = room.activityLog.slice(0, 20);
+                }
+                
+                this.saveRoomToStorage(roomCode, room);
+                return true;
+            },
+            
+            // 获取房间错题统计
+            getWrongQuestionsStats: function(roomCode) {
+                const room = this.getRoom(roomCode);
+                if (!room || !room.wrongQuestions) return { total: 0, studentsWithWrong: 0, mostCommonIngredient: null };
+                
+                const wrongQuestions = room.wrongQuestions;
+                const studentIdsWithWrong = new Set();
+                
+                wrongQuestions.forEach(q => {
+                    if (q.studentAnswers) {
+                        q.studentAnswers.forEach(sa => studentIdsWithWrong.add(sa.studentId));
+                    }
+                });
+                
+                // 统计最容易出错的原料
+                const ingredientCounts = {};
+                wrongQuestions.forEach(q => {
+                    if (q.ingredientName) {
+                        ingredientCounts[q.ingredientName] = (ingredientCounts[q.ingredientName] || 0) + (q.count || 1);
+                    }
+                });
+                
+                let mostCommonIngredient = null;
+                let maxCount = 0;
+                for (const [ingredient, count] of Object.entries(ingredientCounts)) {
+                    if (count > maxCount) {
+                        mostCommonIngredient = ingredient;
+                        maxCount = count;
+                    }
+                }
+                
+                return {
+                    total: wrongQuestions.length,
+                    studentsWithWrong: studentIdsWithWrong.size,
+                    mostCommonIngredient: mostCommonIngredient
+                };
+            },
+            
+            // 删除房间
+            removeRoom: function(roomCode) {
+                localStorage.removeItem('dumpling_room_' + roomCode);
+                this.clearTeacherRoom();
+                return true;
+            },
+            
+            // 获取房间的所有学生
+            getRoomStudents: function(roomCode) {
+                const room = this.getRoom(roomCode);
+                if (!room || !room.students) return [];
+                return Object.values(room.students);
+            },
+            
+            // 计算房间统计信息
+            getRoomStats: function(roomCode) {
+                const students = this.getRoomStudents(roomCode);
+                if (students.length === 0) {
+                    return {
+                        total: 0,
+                        avgScore: 0,
+                        completed: 0,
+                        inProgress: 0,
+                        notStarted: 0
+                    };
+                }
+                
+                const completed = students.filter(s => s.status === 'completed').length;
+                const inProgress = students.filter(s => s.status === 'in_progress').length;
+                const notStarted = students.filter(s => s.status === 'not_started').length;
+                const totalScore = students.reduce((sum, s) => sum + (s.score || 0), 0);
+                const avgScore = students.length > 0 ? Math.round(totalScore / students.length) : 0;
+                
+                return {
+                    total: students.length,
+                    avgScore: avgScore,
+                    completed: completed,
+                    inProgress: inProgress,
+                    notStarted: notStarted
+                };
+            },
+            
+            // 获取房间活动记录
+            getRoomActivity: function(roomCode, limit = 10) {
+                const room = this.getRoom(roomCode);
+                if (!room || !room.activityLog) return [];
+                return room.activityLog.slice(0, limit);
+            },
+            
+            // 格式时间显示
+            formatTime: function(date) {
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                
+                if (diffMins < 1) {
+                    return "刚刚";
+                } else if (diffMins < 60) {
+                    return `${diffMins}分钟前`;
+                } else if (diffHours < 24) {
+                    return `${diffHours}小时前`;
+                } else {
+                    return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+            },
+            
+            // 生成包含房间数据的URL - 简化版本，只传房间代码
+            generateRoomUrl: function(roomData) {
+                const currentUrl = window.location.href.split('?')[0];
+                const url = `${currentUrl}?room=${roomData.roomCode}`;
+                console.log("生成的房间URL:", url);
+                return url;
+            },
+            
+            // 检查并恢复会话
+            restoreSession: function() {
+                const sessionInfo = this.getSessionInfo();
+                if (!sessionInfo) return null;
+                
+                // 检查房间是否仍然存在
+                const room = this.getRoom(sessionInfo.roomCode);
+                if (!room || !room.isActive) {
+                    this.clearSessionInfo();
+                    return null;
+                }
+                
+                return sessionInfo;
+            }
+        };
+
+        // 应用状态管理 - 改进版本
+        class DumplingGame {
+            constructor() {
+                this.currentView = 'home';
+                this.userRole = null;
+                this.userName = '';
+                this.roomCode = '';
+                this.userId = '';
+                this.currentChart = null;
+                this.pollingInterval = null;
+                this.isTeacherOwner = false;
+                this.lastUpdateTime = null;
+                
+                // 生成唯一用户ID
+                this.userId = this.getOrCreateUserId();
+                
+                // 检查是否在微信中打开
+                this.isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+                if (this.isWeChat) {
+                    document.getElementById('simplifiedModeBadge').classList.remove('d-none');
+                }
+                
+                // 学生端状态
+                this.studentState = {
+                    selectedIngredients: [],
+                    currentExercise: null,
+                    currentQuestionIndex: 0,
+                    answers: {},
+                    score: 0,
+                    completed: false,
+                    startTime: null
+                };
+                
+                // 可用原料 (HSK 3-4级词汇)
+                this.ingredients = [
+                    { id: 1, name: '猪肉', pinyin: 'zhū ròu', category: '肉类', hskLevel: 3, iconClass: 'pork' },
+                    { id: 2, name: '白菜', pinyin: 'bái cài', category: '蔬菜', hskLevel: 3, iconClass: 'cabbage' },
+                    { id: 3, name: '盐', pinyin: 'yán', category: '调味品', hskLevel: 3, iconClass: 'salt' },
+                    { id: 4, name: '鸡蛋', pinyin: 'jī dàn', category: '蛋类', hskLevel: 3, iconClass: 'egg' },
+                    { id: 5, name: '面条', pinyin: 'miàn tiáo', category: '面食', hskLevel: 3, iconClass: 'noodles' },
+                    { id: 6, name: '酱油', pinyin: 'jiàng yóu', category: '调味品', hskLevel: 4, iconClass: 'soy-sauce' },
+                    { id: 7, name: '醋', pinyin: 'cù', category: '调味品', hskLevel: 4, iconClass: 'vinegar' },
+                    { id: 8, name: '辣椒', pinyin: 'là jiāo', category: '蔬菜', hskLevel: 4, iconClass: 'pepper' }
+                ];
+                
+                // 位移把字句题库 (针对每种原料)
+                this.sentenceQuestions = [
+                    { ingredientId: 1, correct: "我把猪肉放到菜板上。", 
+                      wrongs: ["我猪肉把放到菜板上。", "把猪肉我放到菜板上。", "我放到菜板上把猪肉。"] },
+                    { ingredientId: 1, correct: "请把猪肉放在这个碗里。", 
+                      wrongs: ["请猪肉把放在这个碗里。", "把猪肉请放在这个碗里。", "请放在这个碗里把猪肉。"] },
+                    { ingredientId: 2, correct: "妈妈把白菜切到盆子里。", 
+                      wrongs: ["妈妈白菜把切到盆子里。", "把白菜妈妈切到盆子里。", "妈妈切到盆子里把白菜。"] },
+                    { ingredientId: 2, correct: "他把白菜放在桌子上。", 
+                      wrongs: ["他白菜把放在桌子上。", "把白菜他放在桌子上。", "他放在桌子上把白菜。"] },
+                    { ingredientId: 3, correct: "请把盐加到馅儿里。", 
+                      wrongs: ["请盐把加到馅儿里。", "把盐请加到馅儿里。", "请加到馅儿里把盐。"] },
+                    { ingredientId: 3, correct: "我把盐放到小碟子里。", 
+                      wrongs: ["我盐把放到小碟子里。", "把盐我放到小碟子里。", "我放到小碟子里把盐。"] },
+                    { ingredientId: 4, correct: "姐姐把鸡蛋打到碗中。", 
+                      wrongs: ["姐姐鸡蛋把打到碗中。", "把鸡蛋姐姐打到碗中。", "姐姐打到碗中把鸡蛋。"] },
+                    { ingredientId: 4, correct: "请把鸡蛋放在冰箱里。", 
+                      wrongs: ["请鸡蛋把放在冰箱里。", "把鸡蛋请放在冰箱里。", "请放在冰箱里把鸡蛋。"] },
+                    { ingredientId: 5, correct: "我把面条放到锅里。", 
+                      wrongs: ["我面条把放到锅里。", "把面条我放到锅里。", "我放到锅里把面条。"] },
+                    { ingredientId: 6, correct: "爸爸把酱油倒在饺子上。", 
+                      wrongs: ["爸爸酱油把倒在饺子上。", "把酱油爸爸倒在饺子上。", "爸爸倒在饺子上把酱油。"] },
+                    { ingredientId: 7, correct: "请把醋递给我。", 
+                      wrongs: ["请醋把递给我。", "把醋请递给我。", "请递给我把醋。"] },
+                    { ingredientId: 8, correct: "他把辣椒放到馅儿里。", 
+                      wrongs: ["他辣椒把放到馅儿里。", "把辣椒他放到馅儿里。", "他放到馅儿里把辣椒。"] }
+                ];
+                
+                this.init();
+            }
+            
+            getOrCreateUserId() {
+                // 从localStorage获取或创建用户ID
+                let userId = localStorage.getItem('dumpling_user_id');
+                if (!userId) {
+                    userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('dumpling_user_id', userId);
+                }
+                return userId;
+            }
+            
+            init() {
+                this.bindEvents();
+                this.renderIngredients();
+                
+                // 检查并恢复会话
+                this.restoreSession();
+                
+                // 检查URL参数，如果有房间代码，自动处理
+                this.checkUrlParams();
+                
+                console.log("饺子工坊应用已初始化。用户ID:", this.userId);
+            }
+            
+            restoreSession() {
+                // 首先尝试恢复教师会话
+                const teacherRoomInfo = window.DumplingClassrooms.getTeacherRoom();
+                if (teacherRoomInfo) {
+                    const room = window.DumplingClassrooms.getRoom(teacherRoomInfo.roomCode);
+                    if (room && room.isActive) {
+                        // 恢复教师会话
+                        this.userRole = 'teacher';
+                        this.userName = teacherRoomInfo.teacherName;
+                        this.roomCode = teacherRoomInfo.roomCode;
+                        this.isTeacherOwner = true;
+                        
+                        // 直接进入教师房间管理界面
+                        this.showView('teacherRoom');
+                        console.log("教师会话已恢复:", teacherRoomInfo);
+                        return;
+                    } else {
+                        // 房间不存在或已关闭，清除教师房间信息
+                        window.DumplingClassrooms.clearTeacherRoom();
+                    }
+                }
+                
+                // 尝试恢复学生会话
+                const sessionInfo = window.DumplingClassrooms.restoreSession();
+                if (sessionInfo) {
+                    const room = window.DumplingClassrooms.getRoom(sessionInfo.roomCode);
+                    if (room && room.isActive) {
+                        // 恢复学生会话
+                        this.userRole = sessionInfo.userRole;
+                        this.userName = sessionInfo.userName;
+                        this.roomCode = sessionInfo.roomCode;
+                        this.userId = sessionInfo.userId;
+                        
+                        // 检查学生是否在房间中
+                        const student = room.students[this.userId];
+                        if (student) {
+                            // 根据学生状态决定显示哪个视图
+                            if (student.status === 'completed') {
+                                this.showView('studentComplete');
+                                // 恢复学生状态
+                                this.studentState.score = student.score || 0;
+                            } else if (student.status === 'in_progress') {
+                                // 需要重新生成练习或恢复练习状态
+                                this.showView('studentJoin');
+                                // 填充表单
+                                document.getElementById('studentName').value = this.userName;
+                                document.getElementById('roomCodeInput').value = this.roomCode;
+                            } else {
+                                this.showView('studentJoin');
+                                // 填充表单
+                                document.getElementById('studentName').value = this.userName;
+                                document.getElementById('roomCodeInput').value = this.roomCode;
+                            }
+                            console.log("学生会话已恢复:", sessionInfo);
+                            return;
+                        }
+                    }
+                    
+                    // 会话无效，清除
+                    window.DumplingClassrooms.clearSessionInfo();
+                }
+                
+                // 没有有效的会话，显示首页
+                this.showView('home');
+            }
+            
+            checkUrlParams() {
+                const roomCode = window.DumplingClassrooms.getRoomCodeFromUrl();
+                
+                if (roomCode) {
+                    document.getElementById('roomCodeInput').value = roomCode;
+                    
+                    // 检查房间是否存在
+                    const roomExists = window.DumplingClassrooms.roomExists(roomCode);
+                    if (roomExists) {
+                        this.showView('studentJoin');
+                        
+                        // 如果已经有学生姓名（从localStorage），自动填充
+                        const savedName = localStorage.getItem('dumpling_student_name');
+                        if (savedName) {
+                            document.getElementById('studentName').value = savedName;
+                        }
+                    }
+                }
+            }
+            
+            bindEvents() {
+                document.getElementById('btnTeacher').addEventListener('click', () => this.showView('teacherCreate'));
+                document.getElementById('btnStudent').addEventListener('click', () => this.showView('studentJoin'));
+                document.getElementById('btnCreateRoom').addEventListener('click', () => this.createRoom());
+                document.getElementById('btnEndClass').addEventListener('click', () => this.endClass());
+                document.getElementById('btnJoinRoom').addEventListener('click', () => this.joinRoom());
+                
+                // 返回按钮
+                document.getElementById('backToHomeFromJoin').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showView('home');
+                });
+                document.getElementById('backToHomeFromTeacherCreate').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showView('home');
+                });
+                document.getElementById('backToHomeFromTeacherRoom').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('返回首页将保持房间运行，稍后可以重新进入。确定返回吗？')) {
+                        this.showView('home');
+                    }
+                });
+                document.getElementById('backToRoomFromIngredients').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showView('studentJoin');
+                });
+                document.getElementById('backToIngredientsFromExercise').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('返回原料选择将放弃当前练习进度，确定吗？')) {
+                        this.showView('studentIngredients');
+                    }
+                });
+                
+                // 生成随机房间代码按钮
+                document.getElementById('btnGenerateCode').addEventListener('click', () => this.generateRandomRoomCode());
+                
+                // 复制链接按钮
+                document.getElementById('btnCopyLink').addEventListener('click', () => this.copyRoomLink());
+                
+                document.getElementById('btnProceedToExercise').addEventListener('click', () => this.startStudentExercise());
+                document.getElementById('btnBackToRoomStudent').addEventListener('click', () => this.showView('studentIngredients'));
+                document.getElementById('btnNextQuestion').addEventListener('click', () => this.nextQuestion());
+                document.getElementById('btnPrevQuestion').addEventListener('click', () => this.prevQuestion());
+                document.getElementById('btnReviewExercise').addEventListener('click', () => this.reviewExercise());
+                document.getElementById('btnNewIngredients').addEventListener('click', () => this.newIngredients());
+            }
+            
+            showView(viewId) {
+                document.querySelectorAll('.view').forEach(view => {
+                    view.classList.remove('active');
+                });
+                
+                document.getElementById(`view${this.capitalizeFirstLetter(viewId)}`).classList.add('active');
+                this.currentView = viewId;
+                
+                if (this.roomCode && (viewId !== 'home' && viewId !== 'teacherCreate' && viewId !== 'studentJoin')) {
+                    document.getElementById('roomInfo').classList.remove('d-none');
+                    document.getElementById('currentRoomCode').textContent = this.roomCode;
+                    
+                    if (this.userRole === 'teacher') {
+                        document.getElementById('userRoleBadge').innerHTML = '<span class="badge bg-primary">教师</span>';
+                    } else if (this.userRole === 'student') {
+                        document.getElementById('userRoleBadge').innerHTML = '<span class="badge bg-success">学生</span>';
+                    }
+                } else {
+                    document.getElementById('roomInfo').classList.add('d-none');
+                }
+                
+                switch(viewId) {
+                    case 'teacherRoom':
+                        this.startTeacherPolling();
+                        // 初始化Bootstrap标签页
+                        this.initTeacherTabs();
+                        // 生成分享链接
+                        this.generateRoomShareInfo();
+                        break;
+                    case 'studentIngredients':
+                        this.updateSelectedIngredients();
+                        break;
+                    case 'studentExercise':
+                        this.initExercise();
+                        break;
+                    default:
+                        this.stopPolling();
+                }
+                
+                // 保存会话信息
+                if (this.userRole && this.roomCode) {
+                    window.DumplingClassrooms.saveSessionInfo(
+                        this.userRole,
+                        this.roomCode,
+                        this.userId,
+                        this.userName
+                    );
+                }
+            }
+            
+            capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+            
+            generateRandomRoomCode() {
+                // 生成4-6位随机字母数字组合
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                const length = 4 + Math.floor(Math.random() * 3); // 4-6位
+                
+                for (let i = 0; i < length; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                document.getElementById('customRoomCode').value = result;
+            }
+            
+            generateRoomShareInfo() {
+                if (!this.roomCode) return;
+                
+                const room = window.DumplingClassrooms.getRoom(this.roomCode);
+                if (!room) return;
+                
+                // 生成包含房间数据的URL
+                const shareUrl = window.DumplingClassrooms.generateRoomUrl(room);
+                
+                // 确保链接显示在输入框中
+                const roomJoinLink = document.getElementById('roomJoinLink');
+                if (roomJoinLink) {
+                    roomJoinLink.value = shareUrl;
+                    console.log("生成的房间链接:", shareUrl);
+                }
+                
+                // 尝试生成二维码
+                this.generateQRCode(shareUrl);
+            }
+            
+            generateQRCode(text) {
+                const qrcodeContainer = document.getElementById('qrcode');
+                if (!qrcodeContainer) return;
+                
+                qrcodeContainer.innerHTML = '';
+                
+                // 使用qrcode库生成二维码
+                if (typeof QRCode !== 'undefined') {
+                    try {
+                        new QRCode(qrcodeContainer, {
+                            text: text,
+                            width: 150,
+                            height: 150,
+                            colorDark : "#000000",
+                            colorLight : "#ffffff",
+                            correctLevel : QRCode.CorrectLevel.H
+                        });
+                    } catch (e) {
+                        console.error('生成二维码失败:', e);
+                        qrcodeContainer.innerHTML = `<div class="text-muted small">请复制上方链接分享</div>`;
+                    }
+                } else {
+                    qrcodeContainer.innerHTML = `<div class="text-muted small">请复制上方链接分享</div>`;
+                }
+            }
+            
+            copyRoomLink() {
+                const linkInput = document.getElementById('roomJoinLink');
+                if (!linkInput) return;
+                
+                linkInput.select();
+                linkInput.setSelectionRange(0, 99999);
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        alert('链接已复制到剪贴板！\n\n请将链接发送给学生。\n学生点击链接即可加入课堂。');
+                    } else {
+                        // 尝试使用现代 Clipboard API
+                        navigator.clipboard.writeText(linkInput.value)
+                            .then(() => alert('链接已复制到剪贴板！\n\n请将链接发送给学生。\n学生点击链接即可加入课堂。'))
+                            .catch(() => alert('复制失败，请手动复制链接。'));
+                    }
+                } catch (err) {
+                    console.error('复制失败:', err);
+                    alert('复制失败，请手动复制链接。');
+                }
+            }
+            
+            createRoom() {
+                const teacherName = document.getElementById('teacherName').value.trim();
+                let roomCode = document.getElementById('customRoomCode').value.trim().toUpperCase();
+                
+                if (!teacherName) {
+                    alert('请输入您的姓名');
+                    return;
+                }
+                
+                if (!roomCode || roomCode.length < 4 || roomCode.length > 6) {
+                    alert('房间代码必须是4-6位字母或数字');
+                    return;
+                }
+                
+                // 检查房间代码是否已存在（本地检查）
+                const roomInfo = localStorage.getItem('dumpling_room_' + roomCode);
+                if (roomInfo) {
+                    try {
+                        const existingRoom = JSON.parse(roomInfo);
+                        if (existingRoom && existingRoom.isActive !== false) {
+                            alert('该房间代码已存在，请使用其他代码');
+                            return;
+                        }
+                    } catch (e) {
+                        // 如果解析失败，继续创建
+                    }
+                }
+                
+                this.userName = teacherName;
+                this.userRole = 'teacher';
+                this.roomCode = roomCode;
+                this.isTeacherOwner = true;
+                
+                // 创建房间（本地存储）
+                const roomData = window.DumplingClassrooms.createRoom(roomCode, teacherName);
+                
+                // 更新UI
+                document.getElementById('teacherRoomCode').textContent = this.roomCode;
+                document.getElementById('roomCodeDisplay').textContent = this.roomCode;
+                
+                // 生成分享链接
+                const shareUrl = window.DumplingClassrooms.generateRoomUrl(roomData);
+                
+                alert(`房间创建成功！\n\n房间代码：${this.roomCode}\n\n请将以下链接发送给学生：\n${shareUrl}\n\n学生点击链接即可加入课堂。`);
+                
+                // 切换到房间管理视图
+                this.showView('teacherRoom');
+            }
+            
+            initTeacherTabs() {
+                // 初始化Bootstrap标签页
+                const triggerTabList = [].slice.call(document.querySelectorAll('#teacherTab button'));
+                triggerTabList.forEach(triggerEl => {
+                    const tabTrigger = new bootstrap.Tab(triggerEl);
+                    triggerEl.addEventListener('click', event => {
+                        event.preventDefault();
+                        tabTrigger.show();
+                    });
+                });
+            }
+            
+            startTeacherPolling() {
+                // 清除已有的轮询
+                if (this.pollingInterval) {
+                    clearInterval(this.pollingInterval);
+                }
+                
+                // 立即更新一次
+                this.updateTeacherRoom();
+                
+                // 开始轮询更新（每3秒一次，更频繁）
+                this.pollingInterval = setInterval(() => {
+                    this.updateTeacherRoom();
+                }, 3000);
+            }
+            
+            stopPolling() {
+                if (this.pollingInterval) {
+                    clearInterval(this.pollingInterval);
+                    this.pollingInterval = null;
+                }
+            }
+            
+            updateTeacherRoom() {
+                if (this.userRole !== 'teacher' || !this.roomCode) return;
+                
+                const room = window.DumplingClassrooms.getRoom(this.roomCode);
+                if (!room) {
+                    this.stopPolling();
+                    alert('房间已不存在，将返回首页');
+                    this.showView('home');
+                    return;
+                }
+                
+                // 更新学生列表
+                this.updateStudentList();
+                
+                // 更新统计数据
+                this.updateStats();
+                
+                // 更新图表
+                this.updateProgressChart();
+                
+                // 更新错题分析
+                this.updateWrongQuestions();
+                
+                // 更新排行榜
+                this.updateTeacherLeaderboard();
+                
+                // 更新活动记录
+                this.updateActivityFeed();
+                
+                // 更新最后更新时间
+                this.updateLastUpdatedTime();
+            }
+            
+            updateLastUpdatedTime() {
+                this.lastUpdateTime = new Date();
+                const timeStr = this.lastUpdateTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+                document.getElementById('lastUpdatedTime').textContent = `上次更新: ${timeStr}`;
+            }
+            
+            updateStudentList() {
+                const container = document.getElementById('studentList');
+                const studentCount = document.getElementById('studentCount');
+                
+                const students = window.DumplingClassrooms.getRoomStudents(this.roomCode);
+                studentCount.textContent = students.length;
+                
+                if (students.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-user-friends fa-2x mb-2"></i>
+                            <p>等待学生加入...</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                students.forEach(student => {
+                    let statusBadge = '';
+                    
+                    switch(student.status) {
+                        case 'not_started':
+                            statusBadge = '<span class="badge bg-secondary">未开始</span>';
+                            break;
+                        case 'in_progress':
+                            statusBadge = '<span class="badge bg-warning">进行中</span>';
+                            break;
+                        case 'completed':
+                            statusBadge = '<span class="badge bg-success">已完成</span>';
+                            break;
+                    }
+                    
+                    // 显示错题数量
+                    const wrongCount = student.wrongQuestions ? student.wrongQuestions.length : 0;
+                    const wrongBadge = wrongCount > 0 ? 
+                        `<span class="badge bg-danger ms-1" title="错题数">${wrongCount}</span>` : '';
+                    
+                    // 显示当前进度
+                    let progressInfo = '';
+                    if (student.status === 'in_progress' && student.totalQuestions > 0) {
+                        const progress = Math.round((student.currentQuestion || 0) / student.totalQuestions * 100);
+                        progressInfo = `<div class="progress mt-1" style="height: 6px;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: ${progress}%"></div>
+                        </div>`;
+                    }
+                    
+                    html += `
+                        <div class="student-list-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-user-graduate me-2"></i>
+                                    <strong>${student.name}</strong>
+                                    ${statusBadge}
+                                    ${wrongBadge}
+                                </div>
+                                <div>
+                                    得分: <strong>${student.score || 0}</strong>
+                                </div>
+                            </div>
+                            ${progressInfo}
+                            <div class="small text-muted mt-1">
+                                <i class="fas fa-clock me-1"></i>最后活动: ${window.DumplingClassrooms.formatTime(new Date(student.lastActive))}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+            }
+            
+            updateStats() {
+                const stats = window.DumplingClassrooms.getRoomStats(this.roomCode);
+                
+                document.getElementById('statsAvgScore').textContent = stats.avgScore;
+                document.getElementById('statsCompleted').textContent = stats.completed;
+            }
+            
+            updateWrongQuestions() {
+                const room = window.DumplingClassrooms.getRoom(this.roomCode);
+                if (!room) return;
+                
+                const wrongStats = window.DumplingClassrooms.getWrongQuestionsStats(this.roomCode);
+                
+                // 更新统计数字
+                document.getElementById('wrongQuestionsCount').textContent = wrongStats.total;
+                document.getElementById('wrongQuestionsStudents').textContent = wrongStats.studentsWithWrong;
+                document.getElementById('mostWrongIngredient').textContent = wrongStats.mostCommonIngredient || '无';
+                
+                // 更新错题列表
+                const container = document.getElementById('wrongQuestionsList');
+                
+                if (!room.wrongQuestions || room.wrongQuestions.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-clipboard-check fa-2x mb-2"></i>
+                            <p>暂无错题记录</p>
+                            <p class="small">学生完成练习后，错题将显示在这里</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                room.wrongQuestions.forEach((question, index) => {
+                    // 获取原料名称
+                    const ingredient = this.ingredients.find(i => i.id === question.ingredientId);
+                    const ingredientName = ingredient ? ingredient.name : '未知原料';
+                    
+                    // 构建学生答案列表，显示每个学生选择的答案
+                    let studentAnswersHtml = '';
+                    if (question.studentAnswers) {
+                        question.studentAnswers.forEach(studentAnswer => {
+                            const answerClass = studentAnswer.isCorrect ? 'student-answer correct' : 'student-answer wrong';
+                            studentAnswersHtml += `
+                                <div class="mb-1">
+                                    <span class="fw-bold">${studentAnswer.studentName}:</span>
+                                    <span class="${answerClass}">"${studentAnswer.studentAnswer}"</span>
+                                    ${studentAnswer.isCorrect ? 
+                                        '<span class="badge bg-success ms-1">正确</span>' : 
+                                        '<span class="badge bg-danger ms-1">错误</span>'}
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    html += `
+                        <div class="wrong-question-detail ${question.corrected ? 'corrected' : ''}">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <span class="badge bg-danger me-2">错题 ${index + 1}</span>
+                                    <span class="badge bg-warning">${ingredientName}</span>
+                                    <span class="badge bg-info">${question.count || 1}人错</span>
+                                </div>
+                                <small class="text-muted">${window.DumplingClassrooms.formatTime(new Date(question.timestamp))}</small>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <div class="fw-bold">题目:</div>
+                                <div class="ps-3">请选出正确的"把"字句</div>
+                            </div>
+                            
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="text-success">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        <strong>正确答案:</strong>
+                                        <div class="ps-4 mt-1">${question.correctAnswer || '未知'}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-danger">
+                                        <i class="fas fa-times-circle me-1"></i>
+                                        <strong>常见错误:</strong>
+                                        <div class="ps-4 mt-1">${question.wrongAnswers ? question.wrongAnswers.join('<br>') : '未知错误'}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-2">
+                                <div class="fw-bold mb-2">学生答案:</div>
+                                <div class="ps-3">
+                                    ${studentAnswersHtml || '<div class="text-muted small">暂无学生答案记录</div>'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+            }
+            
+            updateTeacherLeaderboard() {
+                const room = window.DumplingClassrooms.getRoom(this.roomCode);
+                if (!room) return;
+                
+                const students = window.DumplingClassrooms.getRoomStudents(this.roomCode);
+                const completedStudents = students.filter(s => s.status === 'completed');
+                
+                if (completedStudents.length === 0) {
+                    document.getElementById('teacherLeaderboard').innerHTML = `
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-chart-line fa-2x mb-2"></i>
+                            <p>等待学生完成练习...</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // 按分数排序
+                const sortedStudents = [...completedStudents].sort((a, b) => (b.score || 0) - (a.score || 0));
+                
+                let html = '';
+                sortedStudents.slice(0, 5).forEach((student, index) => {
+                    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+                    
+                    html += `
+                        <div class="student-list-item mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="me-2">${medal}</span>
+                                    <strong>${student.name}</strong>
+                                </div>
+                                <div>
+                                    <span class="badge bg-success">${student.score || 0}分</span>
+                                    ${student.wrongQuestions && student.wrongQuestions.length > 0 ? 
+                                        `<span class="badge bg-danger ms-1">${student.wrongQuestions.length}错</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('teacherLeaderboard').innerHTML = html;
+            }
+            
+            updateActivityFeed() {
+                const container = document.getElementById('activityFeed');
+                const activities = window.DumplingClassrooms.getRoomActivity(this.roomCode, 10);
+                
+                if (activities.length === 0) {
+                    container.innerHTML = '<div class="text-center text-muted p-3">暂无活动记录</div>';
+                    return;
+                }
+                
+                let html = '';
+                activities.forEach(activity => {
+                    html += `
+                        <div class="activity-item p-3 border-bottom">
+                            <div class="small text-muted">${activity.displayTime || window.DumplingClassrooms.formatTime(new Date(activity.time))}</div>
+                            <div><strong>${activity.author}</strong> ${activity.action}</div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+            }
+            
+            endClass() {
+                if (confirm('确定要结束课堂吗？所有学生将被断开连接，房间数据将被删除。')) {
+                    // 删除房间（从localStorage中永久删除）
+                    window.DumplingClassrooms.removeRoom(this.roomCode);
+                    
+                    // 停止轮询
+                    this.stopPolling();
+                    
+                    // 清除会话信息
+                    window.DumplingClassrooms.clearSessionInfo();
+                    
+                    alert('课堂已结束，房间数据已删除。');
+                    this.showView('home');
+                }
+            }
+            
+            joinRoom() {
+                const studentName = document.getElementById('studentName').value.trim();
+                const roomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
+                
+                if (!studentName) {
+                    alert('请输入你的姓名');
+                    return;
+                }
+                
+                if (!roomCode) {
+                    alert('请输入房间代码');
+                    return;
+                }
+                
+                // 保存学生姓名到本地存储
+                localStorage.setItem('dumpling_student_name', studentName);
+                
+                // 检查房间是否存在（通过localStorage）
+                const roomExists = window.DumplingClassrooms.roomExists(roomCode);
+                if (!roomExists) {
+                    alert(`房间不存在或已过期！\n\n可能的原因：\n1. 房间代码错误：${roomCode}\n2. 教师尚未创建房间\n3. 房间已关闭\n\n请确认房间代码是否正确，或请教师重新发送房间链接`);
+                    return;
+                }
+                
+                const room = window.DumplingClassrooms.getRoom(roomCode);
+                if (!room) {
+                    alert('房间数据读取失败，请重试或请教师重新发送房间链接');
+                    return;
+                }
+                
+                if (!room.isActive) {
+                    alert('房间已关闭，无法加入');
+                    return;
+                }
+                
+                this.userName = studentName;
+                this.userRole = 'student';
+                this.roomCode = roomCode;
+                
+                try {
+                    // 添加学生到房间
+                    window.DumplingClassrooms.addStudent(roomCode, this.userId, studentName);
+                    
+                    console.log(`[同步] 学生 ${studentName} 加入房间 ${roomCode}`);
+                    
+                    // 切换到原料选择视图
+                    this.showView('studentIngredients');
+                    
+                    // 显示欢迎消息
+                    setTimeout(() => {
+                        this.showFeedback('success', `欢迎 ${studentName}！请选择1-3种饺子原料开始练习。`);
+                    }, 500);
+                    
+                } catch (error) {
+                    alert('加入房间失败: ' + error.message);
+                }
+            }
+            
+            renderIngredients() {
+                const container = document.getElementById('ingredientsContainer');
+                let html = '';
+                
+                this.ingredients.forEach(ingredient => {
+                    const hskBadge = ingredient.hskLevel === 3 ? 
+                        '<span class="hsk-badge hsk-3">HSK3</span>' : 
+                        '<span class="hsk-badge hsk-4">HSK4</span>';
+                    
+                    html += `
+                        <div class="col-md-3 col-sm-4 mb-3">
+                            <div class="ingredient-card paper-card text-center" data-id="${ingredient.id}">
+                                <div class="mb-3">
+                                    <i class="fas fa-${this.getIngredientIcon(ingredient.id)} ingredient-icon ${ingredient.iconClass}"></i>
+                                </div>
+                                <h5 class="chinese-subtitle mb-2">${ingredient.name}</h5>
+                                <div class="mb-2">
+                                    <span class="text-muted small">${ingredient.pinyin}</span>
+                                </div>
+                                <div class="mb-3">
+                                    ${hskBadge}
+                                    <span class="badge bg-light text-dark">${ingredient.category}</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-chinese select-ingredient-btn">
+                                        <i class="fas fa-plus me-1"></i>选择
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+                // 绑定选择事件
+                document.querySelectorAll('.select-ingredient-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const card = e.target.closest('.ingredient-card');
+                        const ingredientId = parseInt(card.getAttribute('data-id'));
+                        this.toggleIngredient(ingredientId);
+                    });
+                });
+                
+                // 绑定卡片点击事件
+                document.querySelectorAll('.ingredient-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('select-ingredient-btn')) {
+                            const ingredientId = parseInt(card.getAttribute('data-id'));
+                            this.toggleIngredient(ingredientId);
+                        }
+                    });
+                });
+            }
+            
+            getIngredientIcon(ingredientId) {
+                const icons = {
+                    1: 'bacon',
+                    2: 'leaf',
+                    3: 'mortar-pestle',
+                    4: 'egg',
+                    5: 'utensils',
+                    6: 'wine-bottle',
+                    7: 'wine-bottle',
+                    8: 'pepper-hot'
+                };
+                return icons[ingredientId] || 'question';
+            }
+            
+            toggleIngredient(ingredientId) {
+                const index = this.studentState.selectedIngredients.indexOf(ingredientId);
+                const card = document.querySelector(`.ingredient-card[data-id="${ingredientId}"]`);
+                
+                if (index === -1) {
+                    // 选择原料
+                    if (this.studentState.selectedIngredients.length >= 3) {
+                        alert('最多只能选择3种原料');
+                        return;
+                    }
+                    
+                    this.studentState.selectedIngredients.push(ingredientId);
+                    if (card) card.classList.add('selected');
+                } else {
+                    // 取消选择
+                    this.studentState.selectedIngredients.splice(index, 1);
+                    if (card) card.classList.remove('selected');
+                }
+                
+                // 更新UI
+                this.updateSelectedIngredients();
+                
+                // 更新按钮状态
+                document.getElementById('btnProceedToExercise').disabled = this.studentState.selectedIngredients.length === 0;
+            }
+            
+            updateSelectedIngredients() {
+                const countElement = document.getElementById('selectedCount');
+                const listElement = document.getElementById('selectedIngredientsList');
+                
+                if (countElement) countElement.textContent = this.studentState.selectedIngredients.length;
+                
+                if (!listElement) return;
+                
+                if (this.studentState.selectedIngredients.length === 0) {
+                    listElement.innerHTML = `
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-utensils fa-2x mb-2"></i>
+                            <p>尚未选择任何原料</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                this.studentState.selectedIngredients.forEach(id => {
+                    const ingredient = this.ingredients.find(i => i.id === id);
+                    if (ingredient) {
+                        html += `
+                            <div class="d-flex align-items-center p-2 mb-2 paper-card">
+                                <div class="me-3">
+                                    <i class="fas fa-${this.getIngredientIcon(ingredient.id)} text-warning"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold chinese-subtitle">${ingredient.name}</div>
+                                    <div class="small text-muted">${ingredient.pinyin} • ${ingredient.category}</div>
+                                </div>
+                                <button class="btn btn-sm btn-danger remove-ingredient-btn" data-id="${ingredient.id}">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+                    }
+                });
+                
+                listElement.innerHTML = html;
+                
+                // 绑定移除按钮事件
+                document.querySelectorAll('.remove-ingredient-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const ingredientId = parseInt(btn.getAttribute('data-id'));
+                        this.toggleIngredient(ingredientId);
+                    });
+                });
+            }
+            
+            startStudentExercise() {
+                if (this.studentState.selectedIngredients.length === 0) {
+                    alert('请至少选择一种原料');
+                    return;
+                }
+                
+                // 生成练习题
+                this.generateSentenceExercise();
+                
+                // 记录开始时间
+                this.studentState.startTime = new Date();
+                
+                // 更新学生状态到教师端
+                this.updateStudentStatus('in_progress');
+                
+                // 切换到练习视图
+                this.showView('studentExercise');
+                
+                console.log(`[同步] 学生开始练习，原料: ${this.studentState.selectedIngredients}`);
+            }
+            
+            updateStudentStatus(status) {
+                if (this.userRole !== 'student' || !this.roomCode || !this.userId) return;
+                
+                const updates = {
+                    status: status,
+                    selectedIngredients: this.studentState.selectedIngredients,
+                    score: this.studentState.score
+                };
+                
+                if (status === 'in_progress') {
+                    updates.startTime = new Date().toISOString();
+                    updates.currentQuestion = this.studentState.currentQuestionIndex;
+                    updates.totalQuestions = this.studentState.currentExercise ? this.studentState.currentExercise.totalQuestions : 0;
+                }
+                
+                window.DumplingClassrooms.updateStudent(this.roomCode, this.userId, updates);
+            }
+            
+            generateSentenceExercise() {
+                // 1. 根据选择的原料，筛选相关的题库
+                const selectedIngredientIds = this.studentState.selectedIngredients;
+                const allQuestionsForSelected = this.sentenceQuestions.filter(q => 
+                    selectedIngredientIds.includes(q.ingredientId)
+                );
+                
+                // 2. 为每个选中的原料分配1-2道题（确保题目数量适中）
+                const questions = [];
+                selectedIngredientIds.forEach(ingId => {
+                    const questionsForThisIng = allQuestionsForSelected.filter(q => q.ingredientId === ingId);
+                    // 随机选1-2题（如果题库中有足够题目）
+                    const count = Math.min(questionsForThisIng.length, 2);
+                    const selectedQs = this.getRandomElements(questionsForThisIng, count);
+                    questions.push(...selectedQs);
+                });
+                
+                // 3. 如果题目太少，补充一些通用题
+                if (questions.length < 3) {
+                    const extraNeeded = 3 - questions.length;
+                    const allOtherQuestions = this.sentenceQuestions.filter(q => !selectedIngredientIds.includes(q.ingredientId));
+                    const extraQs = this.getRandomElements(allOtherQuestions, extraNeeded);
+                    questions.push(...extraQs);
+                }
+                
+                // 4. 创建练习对象
+                this.studentState.currentExercise = {
+                    ingredients: selectedIngredientIds.map(id => {
+                        const ing = this.ingredients.find(i => i.id === id);
+                        return ing ? ing.name : '';
+                    }),
+                    questions: questions.map((q, index) => ({
+                        id: index + 1,
+                        ingredientId: q.ingredientId,
+                        ingredientName: this.ingredients.find(i => i.id === q.ingredientId)?.name || '未知',
+                        // 生成四个选项：1个正确 + 3个错误，并随机排序
+                        options: this.shuffleArray([q.correct, ...q.wrongs]),
+                        correctAnswer: q.correct, // 存储正确答案原文
+                        wrongAnswers: q.wrongs, // 存储错误答案
+                        answered: false,
+                        userAnswer: null,
+                        isCorrect: false
+                    })),
+                    totalQuestions: questions.length,
+                    isReview: false
+                };
+                
+                // 5. 重置状态
+                this.studentState.currentQuestionIndex = 0;
+                this.studentState.answers = {};
+                this.studentState.score = 0;
+                this.studentState.completed = false;
+                
+                console.log(`生成的练习包含 ${questions.length} 道题`);
+            }
+            
+            getRandomElements(arr, n) {
+                const shuffled = [...arr].sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, n);
+            }
+            
+            shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+            
+            displayQuestion(index) {
+                if (!this.studentState.currentExercise || index < 0 || index >= this.studentState.currentExercise.questions.length) {
+                    return;
+                }
+                
+                const question = this.studentState.currentExercise.questions[index];
+                const ingredient = this.ingredients.find(i => i.id === question.ingredientId);
+                const ingredientName = ingredient ? ingredient.name : '原料';
+                
+                // 更新UI元素
+                const questionCounter = document.getElementById('questionCounter');
+                if (questionCounter) questionCounter.textContent = `题目 ${index + 1}/${this.studentState.currentExercise.totalQuestions}`;
+                
+                // 更新进度条
+                const progressPercent = ((index) / this.studentState.currentExercise.totalQuestions) * 100;
+                const exerciseProgress = document.getElementById('exerciseProgress');
+                const progressBar = document.getElementById('progressBar');
+                const progressPercentEl = document.getElementById('progressPercent');
+                
+                if (exerciseProgress) exerciseProgress.style.width = `${progressPercent}%`;
+                if (progressBar) progressBar.style.width = `${progressPercent}%`;
+                if (progressPercentEl) progressPercentEl.textContent = `${Math.round(progressPercent)}%`;
+                
+                // 生成题目HTML
+                let optionsHtml = '';
+                const optionLetters = ['A', 'B', 'C', 'D'];
+                question.options.forEach((option, i) => {
+                    let optionClass = 'sentence-option';
+                    const isSelected = question.userAnswer === option;
+                    const isCorrectAnswer = option === question.correctAnswer;
+                    
+                    if (isSelected) {
+                        optionClass += ' selected';
+                        if (question.answered) {
+                            optionClass += isCorrectAnswer ? ' correct-answer' : ' wrong-answer';
+                        }
+                    }
+                    
+                    optionsHtml += `
+                        <div class="${optionClass}" data-option="${option}">
+                            <span class="badge ${isSelected && question.answered ? (isCorrectAnswer ? 'bg-success' : 'bg-danger') : 'bg-secondary'}">${optionLetters[i]}</span>
+                            <span class="sentence-text">${option}</span>
+                        </div>
+                    `;
+                });
+                
+                // 构建完整题目HTML
+                const questionHTML = `
+                    <div class="paper-card">
+                        <h4 class="mb-4 chinese-subtitle">第 ${index + 1} 题</h4>
+                        <div class="mb-4">
+                            <div class="paper-card p-3 mb-3">
+                                <h5 class="text-primary chinese-subtitle">请选择正确的句子</h5>
+                                <p class="lead mb-0">使用原料: <span class="badge bg-warning text-dark">${ingredientName}</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6 class="mb-3 chinese-subtitle">以下哪个句子是正确的"把"字句？</h6>
+                            <div id="sentenceOptionsContainer">
+                                ${optionsHtml}
+                            </div>
+                        </div>
+                        
+                        <div id="questionFeedback" class="mt-3"></div>
+                    </div>
+                `;
+                
+                const exerciseContainer = document.getElementById('exerciseContainer');
+                if (exerciseContainer) exerciseContainer.innerHTML = questionHTML;
+                
+                // 绑定选项点击事件
+                document.querySelectorAll('.sentence-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        if (!question.answered) {
+                            const selectedSentence = option.getAttribute('data-option');
+                            this.selectSentenceAnswer(index, selectedSentence);
+                        }
+                    });
+                });
+                
+                // 更新反馈区域
+                const feedbackContainer = document.getElementById('questionFeedback');
+                if (feedbackContainer) {
+                    if (question.answered) {
+                        if (question.isCorrect) {
+                            feedbackContainer.innerHTML = `<div class="alert alert-success"><i class="fas fa-check-circle me-2"></i>回答正确！这是一个标准的位移把字句。</div>`;
+                        } else {
+                            feedbackContainer.innerHTML = `<div class="alert alert-danger"><i class="fas fa-times-circle me-2"></i>回答错误。正确答案是：<strong>"${question.correctAnswer}"</strong></div>`;
+                        }
+                    } else {
+                        feedbackContainer.innerHTML = '';
+                    }
+                }
+                
+                // 更新按钮状态
+                const prevBtn = document.getElementById('btnPrevQuestion');
+                const nextBtn = document.getElementById('btnNextQuestion');
+                
+                if (prevBtn) prevBtn.classList.toggle('d-none', index === 0);
+                if (nextBtn) nextBtn.textContent = index === this.studentState.currentExercise.totalQuestions - 1 ? '完成练习' : '下一题';
+                
+                // 更新侧边栏信息
+                this.updateExerciseIngredients();
+                this.updateScoreDisplay();
+                
+                // 更新学生当前题目进度
+                if (this.userRole === 'student' && this.roomCode) {
+                    window.DumplingClassrooms.updateStudent(this.roomCode, this.userId, {
+                        currentQuestion: index,
+                        totalQuestions: this.studentState.currentExercise.totalQuestions
+                    });
+                }
+            }
+            
+            selectSentenceAnswer(questionIndex, selectedSentence) {
+                const question = this.studentState.currentExercise.questions[questionIndex];
+                
+                // 记录答案
+                question.userAnswer = selectedSentence;
+                question.answered = true;
+                question.isCorrect = selectedSentence === question.correctAnswer;
+                
+                // 更新得分
+                if (question.isCorrect) {
+                    this.studentState.score += 10;
+                } else {
+                    // 记录错题到教师端
+                    window.DumplingClassrooms.recordWrongQuestion(
+                        this.roomCode,
+                        this.userId,
+                        {
+                            ingredientId: question.ingredientId,
+                            ingredientName: question.ingredientName,
+                            question: "请选出正确的'把'字句",
+                            correctAnswer: question.correctAnswer,
+                            wrongAnswers: question.wrongAnswers,
+                            studentAnswer: selectedSentence
+                        }
+                    );
+                }
+                
+                // 记录到总答案对象
+                this.studentState.answers[questionIndex] = {
+                    sentence: selectedSentence,
+                    isCorrect: question.isCorrect
+                };
+                
+                // 同步学生状态到教师端
+                this.updateStudentStatus('in_progress');
+                
+                // 更新UI
+                this.displayQuestion(questionIndex);
+                this.updateScoreDisplay();
+                
+                console.log(`[同步] 学生答题: 第${questionIndex+1}题, 答案: ${selectedSentence}, 正确: ${question.isCorrect}, 当前得分: ${this.studentState.score}`);
+                
+                // 如果是最后一题，稍后自动进入完成页面
+                if (questionIndex === this.studentState.currentExercise.totalQuestions - 1) {
+                    setTimeout(() => {
+                        this.completeExercise();
+                    }, 2000);
+                }
+            }
+            
+            initExercise() {
+                this.displayQuestion(this.studentState.currentQuestionIndex);
+                this.updateExerciseIngredients();
+                this.updateScoreDisplay();
+            }
+            
+            updateExerciseIngredients() {
+                const container = document.getElementById('exerciseIngredients');
+                if (container && this.studentState.currentExercise && this.studentState.currentExercise.ingredients) {
+                    container.innerHTML = this.studentState.currentExercise.ingredients
+                        .map(ing => `<span class="badge bg-warning text-dark me-1 mb-1">${ing}</span>`)
+                        .join('');
+                }
+            }
+            
+            updateScoreDisplay() {
+                const currentScore = document.getElementById('currentScore');
+                const totalScore = document.getElementById('totalScore');
+                
+                if (currentScore) currentScore.textContent = this.studentState.score;
+                if (totalScore && this.studentState.currentExercise) {
+                    const total = this.studentState.currentExercise.totalQuestions * 10;
+                    totalScore.textContent = total;
+                }
+            }
+            
+            nextQuestion() {
+                const currentIndex = this.studentState.currentQuestionIndex;
+                if (currentIndex < this.studentState.currentExercise.totalQuestions - 1) {
+                    this.studentState.currentQuestionIndex++;
+                    this.displayQuestion(this.studentState.currentQuestionIndex);
+                } else {
+                    this.completeExercise();
+                }
+            }
+            
+            prevQuestion() {
+                if (this.studentState.currentQuestionIndex > 0) {
+                    this.studentState.currentQuestionIndex--;
+                    this.displayQuestion(this.studentState.currentQuestionIndex);
+                }
+            }
+            
+            completeExercise() {
+                this.studentState.completed = true;
+                
+                // 计算用时
+                const endTime = new Date();
+                const timeSpent = Math.round((endTime - this.studentState.startTime) / 1000);
+                
+                // 更新最终得分
+                const finalScore = this.studentState.score;
+                const totalPossible = this.studentState.currentExercise.totalQuestions * 10;
+                
+                const finalScoreEl = document.getElementById('finalScore');
+                const finalTotalEl = document.getElementById('finalTotal');
+                const summaryCorrectEl = document.getElementById('summaryCorrect');
+                const summaryTimeEl = document.getElementById('summaryTime');
+                
+                if (finalScoreEl) finalScoreEl.textContent = finalScore;
+                if (finalTotalEl) finalTotalEl.textContent = totalPossible;
+                if (summaryCorrectEl) summaryCorrectEl.textContent = `${finalScore / 10}/${this.studentState.currentExercise.totalQuestions}`;
+                if (summaryTimeEl) summaryTimeEl.textContent = timeSpent;
+                
+                // 设置完成消息
+                const titleElement = document.getElementById('completionTitle');
+                const messageElement = document.getElementById('completionMessage');
+                
+                const percentage = (finalScore / totalPossible) * 100;
+                
+                if (titleElement && messageElement) {
+                    if (percentage >= 80) {
+                        titleElement.innerHTML = '<i class="fas fa-trophy me-2"></i>优秀！';
+                        titleElement.className = 'mb-3 chinese-title text-success';
+                        messageElement.textContent = `你成功掌握了位移"把字句"的用法，得分 ${finalScore}/${totalPossible}！`;
+                    } else if (percentage >= 60) {
+                        titleElement.innerHTML = '<i class="fas fa-thumbs-up me-2"></i>很好！';
+                        titleElement.className = 'mb-3 chinese-title text-primary';
+                        messageElement.textContent = `你基本掌握了位移"把字句"的用法，得分 ${finalScore}/${totalPossible}。`;
+                    } else {
+                        titleElement.innerHTML = '<i class="fas fa-redo me-2"></i>继续努力';
+                        titleElement.className = 'mb-3 chinese-title text-warning';
+                        messageElement.textContent = `位移"把字句"还需要更多练习，得分 ${finalScore}/${totalPossible}，请复习错题。`;
+                    }
+                }
+                
+                // 更新学生状态到教师端
+                window.DumplingClassrooms.updateStudent(this.roomCode, this.userId, {
+                    status: 'completed',
+                    score: finalScore,
+                    completedTime: new Date().toISOString()
+                });
+                
+                // 切换到完成视图
+                this.showView('studentComplete');
+                
+                console.log(`[同步] 练习完成，最终得分: ${finalScore}/${totalPossible}`);
+            }
+            
+            reviewExercise() {
+                const wrongQuestions = this.studentState.currentExercise.questions.filter(q => 
+                    q.answered && !q.isCorrect
+                );
+                
+                if (wrongQuestions.length === 0) {
+                    alert('没有错题需要复习！');
+                    return;
+                }
+                
+                this.studentState.currentExercise = {
+                    ingredients: this.studentState.currentExercise.ingredients,
+                    questions: wrongQuestions.map(q => ({...q, answered: false, userAnswer: null})),
+                    totalQuestions: wrongQuestions.length,
+                    isReview: true
+                };
+                
+                this.studentState.currentQuestionIndex = 0;
+                this.studentState.score = 0;
+                this.showView('studentExercise');
+            }
+            
+            newIngredients() {
+                this.studentState.selectedIngredients = [];
+                this.studentState.currentExercise = null;
+                this.studentState.currentQuestionIndex = 0;
+                this.studentState.answers = {};
+                this.studentState.score = 0;
+                this.studentState.completed = false;
+                this.showView('studentIngredients');
+            }
+            
+            showFeedback(type, message) {
+                const container = document.getElementById('feedbackArea');
+                if (!container) return;
+                
+                const alertClass = type === 'success' ? 'alert-success' : 'alert-info';
+                const icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+                
+                container.innerHTML = `
+                    <div class="alert ${alertClass}">
+                        <i class="fas ${icon} me-2"></i>
+                        ${message}
+                    </div>
+                `;
+                
+                // 5秒后自动消失
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 5000);
+            }
+            
+            updateProgressChart() {
+                const ctx = document.getElementById('studentProgressChart');
+                if (!ctx) return;
+                
+                const stats = window.DumplingClassrooms.getRoomStats(this.roomCode);
+                
+                // 如果已有图表实例，先销毁
+                if (this.currentChart) {
+                    this.currentChart.destroy();
+                }
+                
+                this.currentChart = new Chart(ctx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['未开始', '进行中', '已完成'],
+                        datasets: [{
+                            data: [stats.notStarted, stats.inProgress, stats.completed],
+                            backgroundColor: [
+                                'rgba(108, 117, 125, 0.7)',
+                                'rgba(255, 193, 7, 0.7)',
+                                'rgba(40, 167, 69, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(108, 117, 125, 1)',
+                                'rgba(255, 193, 7, 1)',
+                                'rgba(40, 167, 69, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        family: "'Noto Serif SC', serif",
+                                        size: 12
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            window.dumplingGame = new DumplingGame();
+        });
+    </script>
+</body>
+</html>
